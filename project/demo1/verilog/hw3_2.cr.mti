@@ -1,0 +1,85 @@
+{C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nor2.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nor2.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module nor2
+
+Top level modules:
+	nor2
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nor3.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nor3.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module nor3
+
+Top level modules:
+	nor3
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/not1.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/not1.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module not1
+
+Top level modules:
+	not1
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_4b.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_4b.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module rca_4b
+
+Top level modules:
+	rca_4b
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nand2.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nand2.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module nand2
+
+Top level modules:
+	nand2
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nand3.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/nand3.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module nand3
+
+Top level modules:
+	nand3
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/fullAdder_1b.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/fullAdder_1b.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module fullAdder_1b
+
+Top level modules:
+	fullAdder_1b
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_16b.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_16b.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module rca_16b
+
+Top level modules:
+	rca_16b
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/clkrst.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/clkrst.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module clkrst
+
+Top level modules:
+	clkrst
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/xor2.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/xor2.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module xor2
+
+Top level modules:
+	xor2
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/xor3.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/xor3.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module xor3
+
+Top level modules:
+	xor3
+
+} {} {}} {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_16b_bench.v} {1 {vlog -work work -stats=none {C:/Users/Erik Burt/Documents/UW Madison/ECE 552/hw3_2/rca_16b_bench.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module rca_16b_bench
+
+Top level modules:
+	rca_16b_bench
+
+} {} {}}
