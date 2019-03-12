@@ -1,1 +1,2 @@
-# cs552-project
+# assigns
+Central repo for all assignments (HW + Project)
