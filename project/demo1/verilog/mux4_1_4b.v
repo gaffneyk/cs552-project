@@ -4,7 +4,7 @@
 
     a 4-bit (quad) 4-1 Mux template
 */
-module mux4_1_4b(InA, InB, InC, InD, S, Out);
+module mux_4_1_4b(InA, InB, InC, InD, S, Out);
 
     // parameter N for length of inputs and outputs (to use with larger inputs/outputs)
     parameter N = 4;
@@ -15,9 +15,9 @@ module mux4_1_4b(InA, InB, InC, InD, S, Out);
 
     // YOUR CODE HERE
 
-mux4_1 bit_0 (.InA(InA[0]), .InB(InB[0]), .InC(InC[0]), .InD(InD[0]), .S(S), .Out(Out[0]));
-mux4_1 bit_1 (.InA(InA[1]), .InB(InB[1]), .InC(InC[1]), .InD(InD[1]), .S(S), .Out(Out[1]));
-mux4_1 bit_2 (.InA(InA[2]), .InB(InB[2]), .InC(InC[2]), .InD(InD[2]), .S(S), .Out(Out[2]));
-mux4_1 bit_3 (.InA(InA[3]), .InB(InB[3]), .InC(InC[3]), .InD(InD[3]), .S(S), .Out(Out[3]));
+mux_4_1 bit_0 (.InA(InA[0]), .InB(InB[0]), .InC(InC[0]), .InD(InD[0]), .S(S), .Out(Out[0]));
+mux_4_1 bit_1 (.InA(InA[1]), .InB(InB[1]), .InC(InC[1]), .InD(InD[1]), .S(S), .Out(Out[1]));
+mux_4_1 bit_2 (.InA(InA[2]), .InB(InB[2]), .InC(InC[2]), .InD(InD[2]), .S(S), .Out(Out[2]));
+mux_4_1 bit_3 (.InA(InA[3]), .InB(InB[3]), .InC(InC[3]), .InD(InD[3]), .S(S), .Out(Out[3]));
 
 endmodule
