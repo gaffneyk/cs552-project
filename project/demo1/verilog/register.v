@@ -11,7 +11,7 @@ module register(readData, err, clk, rst, writeData, writeEn);
 	wire load;
 
 	err_ck_16b err_wd(writeData, w_err_wd);
-	assign err = w_err_wd;
+	assign err = w_err_wd & ~rst;
 
 	assign load = clk | ~writeEn;
 
