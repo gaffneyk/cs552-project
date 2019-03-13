@@ -29,7 +29,8 @@ wire [15:0] ImmExtSL, ImmExt, Inst, PCAddr, PCUpdate, PCAdd2, readData1, readDat
 wire [3:0] ALUCtrl;
 wire [2:0] SESel, writeRegSel;
 wire [1:0] RegDst, OpCode1_0;
-wire PCErr, RegWrite, DMemEn, DMemWrite;
+wire PCErr, RegWrite, DMemEn, DMemWrite, Halt_n, PCrca2Err, CtrlErr, ALUSrc2, PCSrc, PCImm, MemToReg,
+     DMemDump, Jump, WriteDataSel, RFErr, MSB, Zero;
 
 register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
