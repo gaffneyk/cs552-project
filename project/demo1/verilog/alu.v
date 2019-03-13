@@ -26,8 +26,8 @@ module alu(InA, InB, Op, Out, MSB, Zero);
   wire [15:0] w_rolori;
   wire w_cout;
 
-  // 0000 Subtraction
-  subtract sub(.InA(InA), .InB(InB), .Out(w_sub));
+  // 0000 Subtraction (B - A)
+  subtract sub(.InA(InB), .InB(InA), .Out(w_sub));
 
   // 0001 Addition
   rca_16b rca_add(.A(InA), .B(InB), .C_in(1'b0), .S(w_add), .C_out(w_cout));
@@ -69,10 +69,12 @@ module alu(InA, InB, Op, Out, MSB, Zero);
   assign w_btr[0] = InA[15];
 
   // 1001 Set if equal
-  assign w_seq = ~|w_sub;
+  wire [15:0] a_minus_b;
+  subtract sub(.InA(InA), .InB(InB), .Out(a_minus_b));
+  assign w_seq = ~|a_minus_b;
 
   // 1010 Set if less than
-  assign w_slt = ((InA[15] ~^ InB[15]) & w_sub[15]) | (InA[15] & ~InB[15]);
+  assign w_slt = ((InA[15] ~^ InB[15]) & a_minus_b[15]) | (InA[15] & ~InB[15]);
 
   // 1011 Set if less than or equal
   assign w_sle = w_slt | w_seq;
