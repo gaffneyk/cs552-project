@@ -24,7 +24,7 @@ module barrelShifter (In, Cnt, Op, Out);
 
 	wire [15:0] InRotL, InShL, InRotR, InShRl, RotL, ShL, RotR, ShRl;
 	assign InRotL = {In[14:0], In[15]};
-	assign InShRl = {In[14:0], 1'b0};
+	assign InShL = {In[14:0], 1'b0};
 	assign InRotR = {In[0], In[15:1]};
 	assign InShRl = {1'b0, In[15:1]};
 
