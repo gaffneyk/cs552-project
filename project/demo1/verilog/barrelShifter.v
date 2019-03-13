@@ -21,10 +21,10 @@ module barrelShifter (In, Cnt, Op, Out);
 
    /* YOUR CODE HERE */
 
-	wire [15:0] InRotL, InShL, InShRa, InShRl, RotL, ShL, ShRa, ShRl;
+	wire [15:0] InRotL, InShL, InRotR, InShRl, RotL, ShL, RotR, ShRl;
 	assign InRotL = {In[14:0], In[15]};
-	assign InShL = {In[14:0], 1'b0};
-	assign InShRa = {In[15], In[15:1]};
+	assign InShRl = {In[14:0], 1'b0};
+	assign InRotR = {In[0], In[15:1]};
 	assign InShRl = {1'b0, In[15:1]};
 
 // Rotate Left
@@ -48,15 +48,26 @@ mux2_1_16b muxSh2 (.InA(ShL_1), .InB(ShL_1_Alt), .S(Cnt[2]), .Out(ShL_2));
 mux2_1_16b muxSh3 (.InA(ShL_2), .InB(ShL_2_Alt), .S(Cnt[3]), .Out(ShL));
 
 
+// Rotate right
+	wire [15:0] RotR_0, RotR_1, RotR_2, RotR_0_Alt, RotR_1_Alt, RotR_2_Alt;
+mux2_1_16b muxRotR0 (.InA(In), .InB(InRotR), .S(Cnt[0]), .Out(RotR_0));
+	assign RotR_0_Alt = {RotR_0[1:0], RotR_0[15:2]};
+mux2_1_16b muxRotR1 (.InA(RotR_0), .InB(RotR_0_Alt), .S(Cnt[1]), .Out(RotR_1));
+	assign RotR_1_Alt = {RotR_1[3:0], RotR_1[15:4]};
+mux2_1_16b muxRotR2 (.InA(RotR_1), .InB(RotR_1_Alt), .S(Cnt[2]), .Out(RotR_2));
+	assign RotR_2_Alt = {RotR_2[7:0], RotR_2[15:8]};
+mux2_1_16b muxRotR3 (.InA(RotR_2), .InB(RotR_2_Alt), .S(Cnt[3]), .Out(RotR));
+
+
 // Shift right arithmetic
-	wire [15:0] ShRa_0, ShRa_1, ShRa_2, ShRa_0_Alt, ShRa_1_Alt, ShRa_2_Alt;
-mux2_1_16b muxShRa0 (.InA(In), .InB(InShRa), .S(Cnt[0]), .Out(ShRa_0));
-	assign ShRa_0_Alt = {{2{ShRa_0[15]}}, ShRa_0[15:2]};
-mux2_1_16b muxShRa1 (.InA(ShRa_0), .InB(ShRa_0_Alt), .S(Cnt[1]), .Out(ShRa_1));
-	assign ShRa_1_Alt = {{4{ShRa_1[15]}}, ShRa_1[15:4]};
-mux2_1_16b muxShRa2 (.InA(ShRa_1), .InB(ShRa_1_Alt), .S(Cnt[2]), .Out(ShRa_2));
-	assign ShRa_2_Alt = {{8{ShRa_2[15]}}, ShRa_2[15:8]};
-mux2_1_16b muxShRa3 (.InA(ShRa_2), .InB(ShRa_2_Alt), .S(Cnt[3]), .Out(ShRa));
+// 	wire [15:0] ShRa_0, ShRa_1, ShRa_2, ShRa_0_Alt, ShRa_1_Alt, ShRa_2_Alt;
+// mux2_1_16b muxShRa0 (.InA(In), .InB(InShRa), .S(Cnt[0]), .Out(ShRa_0));
+// 	assign ShRa_0_Alt = {{2{ShRa_0[15]}}, ShRa_0[15:2]};
+// mux2_1_16b muxShRa1 (.InA(ShRa_0), .InB(ShRa_0_Alt), .S(Cnt[1]), .Out(ShRa_1));
+// 	assign ShRa_1_Alt = {{4{ShRa_1[15]}}, ShRa_1[15:4]};
+// mux2_1_16b muxShRa2 (.InA(ShRa_1), .InB(ShRa_1_Alt), .S(Cnt[2]), .Out(ShRa_2));
+// 	assign ShRa_2_Alt = {{8{ShRa_2[15]}}, ShRa_2[15:8]};
+// mux2_1_16b muxShRa3 (.InA(ShRa_2), .InB(ShRa_2_Alt), .S(Cnt[3]), .Out(ShRa));
 
 
 // Shift right logical
@@ -70,6 +81,6 @@ mux2_1_16b muxShRl2 (.InA(ShRl_1), .InB(ShRl_1_Alt), .S(Cnt[2]), .Out(ShRl_2));
 mux2_1_16b muxShRl3 (.InA(ShRl_2), .InB(ShRl_2_Alt), .S(Cnt[3]), .Out(ShRl));
 
 // Select   
-mux4_1_16b muxSel (.InA(RotL), .InB(ShL), .InC(ShRa), .InD(ShRl), .S(Op), .Out(Out));
+mux4_1_16b muxSel (.InA(RotL), .InB(ShL), .InC(RotR), .InD(ShRl), .S(Op), .Out(Out));
 
 endmodule
