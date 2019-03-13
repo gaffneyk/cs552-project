@@ -75,7 +75,7 @@ module alu(InA, InB, Op, Out, MSB, Zero);
   assign w_slt = ((InA[15] ~^ InB[15]) & w_sub[15]) | (InA[15] & ~InB[15]);
 
   // 1011 Set if less than or equal
-  assign w_sle = w_sub[15] | w_seq;
+  assign w_sle = w_slt | w_seq;
 
   // 1100 Set if generates carry out
   assign w_sco = {15'b0, w_cout};
