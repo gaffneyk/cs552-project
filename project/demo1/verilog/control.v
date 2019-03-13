@@ -41,7 +41,7 @@ module control (/*AUTOARG*/
 
    /* YOUR CODE HERE */
 
-errMod errMod1 (.OpCode(OpCode), .Funct(Funct), .err(err));
+errMod errMod1 (.OpCode(OpCode), .Funct(Funct), .rst(rst), .err(err));
 
 RegDstMod RegDstMod1 (.OpCode(OpCode), .RegDst(RegDst));
 SESelMod SESelMod1 (.OpCode(OpCode), .SESel(SESel));
