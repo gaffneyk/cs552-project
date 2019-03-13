@@ -24,7 +24,8 @@ module control (/*AUTOARG*/
 		ALUCtrl,
                 // Inputs
                 OpCode,
-                Funct
+                Funct,
+                rst
                 );
 
    // inputs

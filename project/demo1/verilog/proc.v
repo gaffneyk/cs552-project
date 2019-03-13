@@ -42,7 +42,7 @@ control Ctrl(// Outputs
                 .err(CtrlErr), .RegDst(RegDst), .SESel(SESel), .RegWrite(RegWrite), .DMemWrite(DMemWrite), .DMemEn(DMemEn), .ALUSrc2(ALUSrc2), .PCSrc(PCSrc), .PCImm(PCImm), 
 		.MemToReg(MemToReg), .DMemDump(DMemDump), .Jump(Jump), .OpCode1_0(OpCode1_0), .WriteDataSel(WriteDataSel), .Halt_n(Halt_n), .ALUCtrl(ALUCtrl),
              // Inputs
-                .OpCode(Inst[15:11]), .Funct(Inst[1:0]));
+                .OpCode(Inst[15:11]), .Funct(Inst[1:0]), .rst(rst));
 
 rf RegisterFiles (// Outputs
            	     .readData1(readData1), .readData2(readData2), .err(RFErr),
