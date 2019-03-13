@@ -23,7 +23,7 @@ module proc (/*AUTOARG*/
    
    
    /* your code here */
-wire [15:0] ImmExtSL;
+wire [15:0] ImmExtSL, ImmExt, Inst;
 
 register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
@@ -53,8 +53,8 @@ mux2_1_16b MuxALUSrc2 (.InA(ImmExt), .InB(readData2), .S(ALUSrc2), .Out(ALUSrc2D
 
 zero_extend_5b ZEx5b (.in(Inst[4:0]), .out(ZEx5bOut));
 zero_extend_8b ZEx8b (.in(Inst[7:0]), .out(ZEx8bOut));
-sign_extend_5b SEx5b (.in(Inst[4:0]), out(SEx5bOut));
-sign_extend_8b SEx8b (.in(Inst[7:0]), out(SEx8bOut));
+sign_extend_5b SEx5b (.in(Inst[4:0]), .out(SEx5bOut));
+sign_extend_8b SEx8b (.in(Inst[7:0]), .out(SEx8bOut));
 sign_extend_11b SEx11b (.in(Inst[10:0]), .out(SEx11bOut));
 
 mux8_1_16b MuxExtend (.In0(ZEx5bOut), .In1(ZEx8bOut), .In2(SEx5bOut), .In3(SEx5bOut), .In4(SEx8bOut), .In5(SEx8bOut), .In6(SEx11bOut), .In7(SEx11bOut), .S(SESel), .Out(ImmExt));
@@ -63,7 +63,9 @@ mux2_1_16b MuxMemtoReg (.InA(ALU_Out), .InB(DMemData), .S(MemToReg), .Out(MemToR
 assign ImmExtSL = {ImmExt[14:0],1'b0};
 rca_16b PCrcaImm(.A(PCAdd2), .B(ImmExtSL), .C_in(1'b0), .S(PCImmAdd), .C_out(PCrcaImmC_out));
 
-assign err = 0;
+pc_updater PCUpdater (.PC_2(PCAdd2), .PC_2_I(PCImmAdd), .PCImm(PCImm), .PCSrc(PCSrc), .Jump(Jump), .Op_1_0(OpCode1_0), .ALUResult(ALU_Out), .MSB(MSB), .Zero(Zero), .Out(PCUpdate));
+
+assign err = (PCErr | PCrca2Err | CtrlErr | RFErr);
    
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
