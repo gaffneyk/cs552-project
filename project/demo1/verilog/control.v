@@ -57,6 +57,6 @@ JumpMod JumpMod1 (.OpCode(OpCode), .Jump(Jump));
 assign OpCode1_0 = OpCode[1:0];
 WriteDataSelMod WriteDataSelMod1 (.OpCode(OpCode),.WriteDataSel(WriteDataSel));
 assign Halt_n = (OpCode != 5'b00000) ? 1'b1 : 1'b0;
-ALU_Ctrl ALU_Ctrl1 (.Opcode(Opcode), .Funct(Funct), .ALU_Ctrl(ALU_Ctrl));
+ALU_Ctrl ALU_Ctrl1 (.OpCode(OpCode), .Funct(Funct), .ALU_Ctrl(ALUCtrl));
 
 endmodule

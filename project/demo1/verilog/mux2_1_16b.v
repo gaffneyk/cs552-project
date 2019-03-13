@@ -5,7 +5,7 @@ module mux2_1_16b(InA, InB, S, Out);
     parameter N = 16;
 
     input [N-1:0]   InA, InB;
-    input [1:0]     S;
+    input     S;
     output [N-1:0]  Out;
 
 

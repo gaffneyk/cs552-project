@@ -23,11 +23,17 @@ module proc (/*AUTOARG*/
    
    
    /* your code here */
-wire [15:0] ImmExtSL, ImmExt, Inst;
+wire [15:0] ImmExtSL, ImmExt, Inst, PCAddr, PCUpdate, PCAdd2, readData1, readData2, writeData, 
+            ALUSrc2Data, ALU_Out, DMemData, MemToRegOut, ZEx5bOut, ZEx8bOut, SEx5bOut, SEx8bOut, 
+            SEx11bOut, PCImmAdd;
+wire [3:0] ALUCtrl;
+wire [2:0] SESel, writeRegSel;
+wire [1:0] RegDst, OpCode1_0;
+wire PCErr, RegWrite, DMemEn, DMemWrite;
 
 register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
-rca_16b PCrca2 (.A(PCAddr), .B(2'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
+rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 
 memory2c InstMem (.data_out(Inst), .data_in(16'b0), .addr(PCAddr), .enable(Halt_n), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 
