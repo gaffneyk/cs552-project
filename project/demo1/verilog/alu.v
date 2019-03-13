@@ -85,7 +85,7 @@ module alu(InA, InB, Op, Out, MSB, Zero);
 
   // 1110, 1111 Rotate left 8 bits or immediate
   wire [15:0] w_rol_8b;
-  barrelShifter bs_rol_8b(.In(InA), .Cnt(4'b0111), .Op(2'b00), .Out(w_rol_8b));
+  barrelShifter bs_rol_8b(.In(InA), .Cnt(4'b1000), .Op(2'b00), .Out(w_rol_8b));
   assign w_rolori = w_rol_8b | InB;
 
   // Final mux
