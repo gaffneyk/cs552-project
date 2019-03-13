@@ -72,7 +72,7 @@ rca_16b PCrcaImm(.A(PCAdd2), .B(ImmExtSL), .C_in(1'b0), .S(PCImmAdd), .C_out(PCr
 
 pc_updater PCUpdater (.PC_2(PCAdd2), .PC_2_I(PCImmAdd), .PCImm(PCImm), .PCSrc(PCSrc), .Jump(Jump), .Op_1_0(OpCode1_0), .ALUResult(ALU_Out), .MSB(MSB), .Zero(Zero), .Out(PCUpdate));
 
-assign err = (PCErr | PCrca2Err | CtrlErr | RFErr);
-   
+//assign err = (PCErr | PCrca2Err | CtrlErr | RFErr);
+assign err = 1'b0; 
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
