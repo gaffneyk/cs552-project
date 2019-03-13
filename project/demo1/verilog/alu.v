@@ -72,7 +72,7 @@ module alu(InA, InB, Op, Out, MSB, Zero);
   assign w_seq = ~|w_sub;
 
   // 1010 Set if less than
-  assign w_slt = w_sub[15] | (InA[15] & ~InB[15]);
+  assign w_slt = ((InA[15] ~^ InB[15]) & w_sub[15]) | (InA[15] & ~InB[15]);
 
   // 1011 Set if less than or equal
   assign w_sle = w_sub[15] | w_seq;
