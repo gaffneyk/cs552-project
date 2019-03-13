@@ -31,6 +31,7 @@ module control (/*AUTOARG*/
    // inputs
    input [4:0]  OpCode;
    input [1:0]  Funct;
+   input rst;
    
    // outputs
    output       err;
