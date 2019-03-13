@@ -113,7 +113,7 @@ module alu(InA, InB, Op, Out, MSB, Zero);
   assign MSB = InA[15];
 
   // Zero
-  assign zero = ~|InA;
+  assign Zero = ~|InA;
 
 
 endmodule
