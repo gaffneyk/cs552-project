@@ -22,6 +22,33 @@ module rf_bypass (
    output [15:0] readData2;
    output        err;
 
+<<<<<<< HEAD
+   wire [15:0] rf_readData1;
+   wire [15:0] rf_readData2;
+
+   rf rf0(
+          // Outputs
+          .readData1                    (rf_readData1[15:0]),
+          .readData2                    (rf_readData2[15:0]),
+          .err                          (err),
+          // Inputs
+          .clk                          (clk),
+          .rst                          (rst),
+          .readReg1Sel                  (readReg1Sel[2:0]),
+          .readReg2Sel                  (readReg2Sel[2:0]),
+          .writeRegSel                  (writeRegSel[2:0]),
+          .writeData                    (writeData[15:0]),
+          .writeEn                      (writeEn));
+
+   wire s1;
+   wire s2;
+
+   assign s1 = (&(writeRegSel ~^ readReg1Sel) & writeEn);
+   assign s2 = (&(writeRegSel ~^ readReg2Sel) & writeEn);
+
+   mux_2_1_16b m1(rf_readData1, writeData, s1, readData1);
+   mux_2_1_16b m2(rf_readData2, writeData, s2, readData2);
+=======
    /* YOUR CODE HERE */
 
 wire [15:0] outData1, outData2;
@@ -29,5 +56,6 @@ rf rf1 (.readData1(outData1), .readData2(outData2), .err(err), .clk(clk), .rst(r
 
 assign readData1 = (writeEn & (readReg1Sel == writeRegSel)) ? writeData : outData1;
 assign readData2 = (writeEn & (readReg2Sel == writeRegSel)) ? writeData : outData2;
+>>>>>>> cedda00b10eff5b0f1f03471bf9cd365c1f765cd
 
 endmodule

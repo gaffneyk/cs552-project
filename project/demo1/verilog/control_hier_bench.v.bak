@@ -70,7 +70,10 @@ always @ (posedge clk)begin
       end
       if (cycle_count == 33) begin
         OpCode = 5'b100z0;
+<<<<<<< HEAD
+=======
 	Funct = 2'b00;
+>>>>>>> cedda00b10eff5b0f1f03471bf9cd365c1f765cd
       end
       if (cycle_count == 34) begin
         OpCode = 5'b11000;
