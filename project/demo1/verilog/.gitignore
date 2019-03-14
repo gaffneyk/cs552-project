@@ -1,0 +1,13 @@
+/work
+*.out
+*.ptrace
+*.trace
+*.vcd
+*.wlf
+*.lst
+*.img
+*.dmem
+*.reg
+*.log
+transcript
+dumpfile
