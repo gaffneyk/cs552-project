@@ -1,4 +1,5 @@
 /work
+/__work
 *.out
 *.ptrace
 *.trace
