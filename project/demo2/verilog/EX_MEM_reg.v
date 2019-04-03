@@ -1,6 +1,6 @@
-module EX_MEM_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, errOut);
+module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, rstOut, errOut);
 
-	input clk, rst;
+	input clk;
 	input [15:0] CtrlIn;
 	input [15:0] PCAdd2In;
 	input [15:0] ReadData2In;
@@ -9,6 +9,7 @@ module EX_MEM_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOut
 	input MSBIn;
 	input ZeroIn;
 	input [2:0] WriteRegSelIn;
+	input rstIn;
 	input errIn;
 
 	output [15:0] CtrlOut;
@@ -19,6 +20,7 @@ module EX_MEM_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOut
 	output MSBOut;
 	output ZeroOut;
 	output [2:0] WriteRegSelOut;
+	output rstOut;
 	output errOut;
 
 	wire Ctrl_err, PCAdd2_err, ReadData2_err, ALUOut_err, PCImmAdd_err, aux_err;
@@ -68,15 +70,17 @@ module EX_MEM_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOut
 		.clk(clk),
 		.rst(rst),
 		.err(aux_err),
-		.writeData({10'b0, MSBIn, ZeroIn, WriteRegSelIn, errIn}),
+		.writeData({9'b0, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
 
-	assign MSBOut = aux_reg_out[5];
+	assign MSBOut = aux_reg_out[6];
 
-	assign ZeroOut = aux_reg_out[4];
+	assign ZeroOut = aux_reg_out[5];
 
-	assign WriteRegSelOut = aux_reg_out[3:1];
+	assign WriteRegSelOut = aux_reg_out[4:2];
+
+	assign rstOut = aux_reg_out[1];
 
 	assign errOut = (Ctrl_err | PCAdd2_err | ReadData2_err | ALUOut_err | PCImmAdd_err | aux_err | aux_reg_out[0]) & ~rst;
 

@@ -33,7 +33,7 @@ wire [3:0]	ALUCtrl_ID;
 wire [2:0]	writeRegSelOut_ID, writeRegSelOut_ID_EX, writeRegSelOut_EX_MEM, writeRegSelOut_MEM_WB;
 wire [1:0]	OpCode1_0_ID;
 wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX,
-	 	ZeroOut_EX_MEM, Halt_n;
+	 	ZeroOut_EX_MEM, Halt_n, rst_IF_ID, rst_ID_EX, rst_EX_MEM, rst_MEM_WB;
 
 
 	IF_stage IF (//outputs
@@ -44,9 +44,9 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 
 
 	IF_ID_reg IF_ID (//outputs
-		.PCAdd2Out(PCAdd2Out_IF_ID), .InstOut(Inst_IF_ID), .errOut(),
+		.PCAdd2Out(PCAdd2Out_IF_ID), .InstOut(Inst_IF_ID), .rstOut(rst_IF_ID), .errOut(),
 		//inputs
-		.clk(clk), .rst(rst), .PCAdd2In(PCAdd2Out_IF), .InstIn(Inst_IF), .errIn());
+		.clk(clk), .PCAdd2In(PCAdd2Out_IF), .InstIn(Inst_IF), .rstIn(rst), .errIn());
 
 
 
@@ -61,11 +61,12 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 
 
 	ID_EX_reg ID_EX (//outputs
-		.CtrlOut(CtrlOut_ID_EX), .PCAdd2Out(PCAdd2Out_ID_EX), .WriteRegSelOut(writeRegSelOut_ID_EX), .ReadData1Out(ReadData1Out_ID_EX), .ReadData2Out(ReadData2Out_ID_EX), .ImmExtOut(ImmExtOut_ID_EX), .errOut(),
+		.CtrlOut(CtrlOut_ID_EX), .PCAdd2Out(PCAdd2Out_ID_EX), .WriteRegSelOut(writeRegSelOut_ID_EX), .ReadData1Out(ReadData1Out_ID_EX), .ReadData2Out(ReadData2Out_ID_EX), 
+		.ImmExtOut(ImmExtOut_ID_EX), .rstOut(rst_ID_EX), .errOut(),
 		//inputs
-		.clk(clk), .rst(rst), .ALUSrc2(ALUSrc2_ID), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), .PCSrc(PCSrc_ID), .Jump(Jump_ID), .Opcode1_0(OpCode1_0_ID), .DMemEn(DMemEn_ID), 
+		.clk(clk), .ALUSrc2(ALUSrc2_ID), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), .PCSrc(PCSrc_ID), .Jump(Jump_ID), .Opcode1_0(OpCode1_0_ID), .DMemEn(DMemEn_ID), 
 		.DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), .RegWrite(RegWriteOut_ID), .PCAdd2In(PCAdd2Out_IF_ID), 
-		.WriteRegSelIn(writeRegSelOut_ID), .ReadData1In(readData1_ID), .ReadData2In(readData2_ID), .ImmExtIn(ImmExt_ID), .errIn());
+		.WriteRegSelIn(writeRegSelOut_ID), .ReadData1In(readData1_ID), .ReadData2In(readData2_ID), .ImmExtIn(ImmExt_ID), .rstIn(), .errIn());
 
 
 
@@ -78,10 +79,10 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 
 	EX_MEM_reg EX_MEM (//outputs
 		.CtrlOut(CtrlOut_EX_MEM), .PCAdd2Out(PCAdd2Out_EX_MEM), .WriteRegSelOut(writeRegSelOut_EX_MEM), .ReadData2Out(ReadData2Out_EX_MEM), .ALUOutOut(ALUOutOut_EX_MEM), 
-		.MSBOut(MSBOut_EX_MEM), .ZeroOut(ZeroOut_EX_MEM), .PCImmAddOut(PCImmAddOut_EX_MEM), .errOut(),
+		.MSBOut(MSBOut_EX_MEM), .ZeroOut(ZeroOut_EX_MEM), .PCImmAddOut(PCImmAddOut_EX_MEM), .rstOut(rst_EX_MEM), .errOut(),
 		//inputs
-		.clk(clk), .rst(rst), .CtrlIn(CtrlOut_ID_EX), .PCAdd2In(PCAdd2Out_ID_EX), .WriteRegSelIn(writeRegSelOut_ID_EX), .ReadData2In(ReadData2Out_ID_EX), .ALUOutIn(ALU_Out_EX), 
-		.MSBIn(MSB_EX), .ZeroIn(Zero_EX), .PCImmAddIn(PCImmAdd_EX), .errIn());
+		.clk(clk), .CtrlIn(CtrlOut_ID_EX), .PCAdd2In(PCAdd2Out_ID_EX), .WriteRegSelIn(writeRegSelOut_ID_EX), .ReadData2In(ReadData2Out_ID_EX), .ALUOutIn(ALU_Out_EX), 
+		.MSBIn(MSB_EX), .ZeroIn(Zero_EX), .PCImmAddIn(PCImmAdd_EX), .rstIn(), .errIn());
 
 
 
@@ -95,9 +96,11 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 
 
 	MEM_WB_reg MEM_WB (//outputs
-		.CtrlOut(CtrlOut_MEM_WB), .PCAdd2Out(PCAdd2Out_MEM_WB), .WriteRegSelOut(writeRegSelOut_MEM_WB), .ALUOutOut(ALUOutOut_MEM_WB), .DMemDataOut(DMemDataOut_MEM_WB), .errOut(),
+		.CtrlOut(CtrlOut_MEM_WB), .PCAdd2Out(PCAdd2Out_MEM_WB), .WriteRegSelOut(writeRegSelOut_MEM_WB), .ALUOutOut(ALUOutOut_MEM_WB), .DMemDataOut(DMemDataOut_MEM_WB), 
+		.rstOut(rst_MEM_WB), .errOut(),
 		//inputs
-		.clk(clk), .rst(rst), .CtrlIn(CtrlOut_EX_MEM), .PCAdd2In(PCAdd2Out_EX_MEM), .WriteRegSelIn(writeRegSelOut_EX_MEM), .ALUOutIn(ALUOutOut_EX_MEM), .DMemDataIn(DMemData_MEM), .errIn());
+		.clk(clk), .CtrlIn(CtrlOut_EX_MEM), .PCAdd2In(PCAdd2Out_EX_MEM), .WriteRegSelIn(writeRegSelOut_EX_MEM), .ALUOutIn(ALUOutOut_EX_MEM), .DMemDataIn(DMemData_MEM), 
+		.rstIn(), .errIn());
 
 
 

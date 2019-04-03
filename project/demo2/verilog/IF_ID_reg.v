@@ -1,12 +1,14 @@
-module IF_ID_reg(clk, rst, PCAdd2In, InstIn, errIn, PCAdd2Out, InstOut, errOut);
+module IF_ID_reg(clk, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut, errOut);
 
-	input clk, rst;
+	input clk;
 	input [15:0] PCAdd2In;
 	input [15:0] InstIn;
+	input rstIn;
 	input errIn;
 
 	output [15:0] PCAdd2Out;
 	output [15:0] InstOut;
+	output rstOut;
 	output errOut;
 
 	wire PCAdd2_err, Inst_err, aux_err;
@@ -32,9 +34,11 @@ module IF_ID_reg(clk, rst, PCAdd2In, InstIn, errIn, PCAdd2Out, InstOut, errOut);
 		.clk(clk),
 		.rst(rst),
 		.err(aux_err),
-		.writeData({15'b0, errIn}),
+		.writeData({14'b0, rstIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
+
+	assign rstOut = aux_reg_out[1];
 
 	assign errOut = (PCAdd2_err | Inst_err | aux_err | aux_reg_out[0]) & ~rst;
 
