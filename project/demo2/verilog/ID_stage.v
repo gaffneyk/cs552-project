@@ -1,7 +1,7 @@
 
 module ID_stage (
 		//outputs
-		writeRegSelOut, readData1, readData2, ImmExt, hazard_f, branch_f, ALUCtrl, PCImm, PCSrc, Jump, OpCode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2,
+		writeRegSelOut, readData1, readData2, ImmExt, hazard_f, ALUCtrl, PCImm, PCSrc, Jump, OpCode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2,
 		//inputs
 		Inst, Halt_n, clk, rst, writeRegSelIn, writeData, RegWriteIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
 		);
@@ -10,7 +10,7 @@ module ID_stage (
 	input [2:0]	writeRegSelIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB;
 	input [15:0]	Inst, writeData;
 
-	output		hazard_f, branch_f, PCImm, PCSrc, Jump, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2;
+	output		hazard_f, PCImm, PCSrc, Jump, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2;
 	output [1:0]	OpCode1_0;
 	output [2:0]	writeRegSelOut;
 	output [3:0] 	ALUCtrl;
