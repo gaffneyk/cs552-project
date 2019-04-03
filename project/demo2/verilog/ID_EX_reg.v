@@ -1,18 +1,19 @@
 module ID_EX_reg(clk, rst, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite, PCAdd2In, WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData1Out, ReadData2Out, ImmExtOut, errOut);
 
 	input clk, rst;
-	input ALUSrc2;
-	input [3:0] ALUCtrl;
-	input PCImm;
-	input PCSrc;
-	input Jump;
-	input [1:0] Opcode1_0;
-	input DMemEn;
-	input DMemWrite;
-	input DMemDump;
-	input MemToReg;
-	input WriteDataSel;
-	input RegWrite;
+
+	input ALUSrc2;			// 15
+	input [3:0] ALUCtrl;	// 14:11
+	input PCImm;			// 10
+	input PCSrc;			// 9
+	input Jump;				// 8
+	input [1:0] Opcode1_0;	// 7:6
+	input DMemEn;			// 5
+	input DMemWrite;		// 4
+	input DMemDump;			// 3
+	input MemToReg;			// 2
+	input WriteDataSel;		// 1
+	input RegWrite;			// 0
 
 	input [15:0] PCAdd2In;
 	input [2:0] WriteRegSelIn;
