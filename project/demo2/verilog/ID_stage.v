@@ -1,22 +1,22 @@
 
 module ID_stage (
 		//outputs
-		writeRegSelOut, readData1, readData2, ImmExt, hazard_f, ALUCtrl, PCImm, PCSrc, Jump, OpCode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2,
+		Halt_n, writeRegSelOut, readData1, readData2, ImmExt, hazard_f, ALUCtrl, PCImm, PCSrc, Jump, OpCode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2,
 		//inputs
-		Inst, Halt_n, clk, rst, writeRegSelIn, writeData, RegWriteIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
+		Inst, clk, rst, writeRegSelIn, writeData, RegWriteIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
 		);
 
-	input		Halt_n, clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB;
+	input		clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB;
 	input [2:0]	writeRegSelIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB;
 	input [15:0]	Inst, writeData;
 
-	output		hazard_f, PCImm, PCSrc, Jump, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2;
+	output		Halt_n, hazard_f, PCImm, PCSrc, Jump, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2;
 	output [1:0]	OpCode1_0;
 	output [2:0]	writeRegSelOut;
 	output [3:0] 	ALUCtrl;
 	output [15:0]	readData1, readData2, ImmExt;
 	
-	wire	 Halt_n, RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH;
+	wire	 RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH;
 	wire [1:0] RegDst;
 	wire [2:0]	SESel, Reg1Sel, Reg2Sel;
 	wire [15:0]	Inst, ZEx5bOut, ZEx8bOut, SEx5bOut, SEx8bOut, SEx11bOut;
@@ -48,12 +48,12 @@ module ID_stage (
 	assign	Reg1Sel = Inst[10:8];
 	assign	Reg2Sel = Inst[7:5];
 
-	assign	hazard_f = ((Reg1Sel == writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
-			((Reg1Sel == writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
-			((Reg1Sel == writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 :
-			((Reg2Sel == writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
-			((Reg2Sel == writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
-			((Reg2Sel == writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0;
+	assign	hazard_f = ((Reg1Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
+			((Reg1Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
+			((Reg1Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 :
+			((Reg2Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
+			((Reg2Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
+			((Reg2Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0;
 
 	//RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH
 	assign RegWriteOut = (hazard_f) ? 1'b0 : RegWriteH;

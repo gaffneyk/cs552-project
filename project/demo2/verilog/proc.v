@@ -32,13 +32,14 @@ wire [15:0]	CtrlOut_ID_EX, CtrlOut_EX_MEM, CtrlOut_MEM_WB, PCAdd2Out_IF, PCAdd2O
 wire [3:0]	ALUCtrl_ID;
 wire [2:0]	writeRegSelOut_ID, writeRegSelOut_ID_EX, writeRegSelOut_EX_MEM, writeRegSelOut_MEM_WB;
 wire [1:0]	OpCode1_0_ID;
-wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX, ZeroOut_EX_MEM;
+wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX,
+	 	ZeroOut_EX_MEM, Halt_n;
 
 
 	IF_stage IF (//outputs
 		.PCAdd2(PCAdd2Out_IF), .Inst(Inst_IF),
 		//inputs
-		.hazard_f(hazard_f), .branch_EX(CtrlOut_ID_EX[9]), .branch_ID(PCSrc_ID), .clk(clk), .rst(rst), .PCUpdateH(PCUpdateMEM), .Halt_n());
+		.hazard_f(hazard_f), .branch_EX(CtrlOut_ID_EX[9]), .branch_ID(PCSrc_ID), .clk(clk), .rst(rst), .PCUpdateH(PCUpdateMEM), .Halt_n(1'b1));
 
 
 
@@ -52,9 +53,9 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 	ID_stage ID (//outputs
 		.writeRegSelOut(writeRegSelOut_ID), .readData1(readData1_ID), .readData2(readData2_ID), .ImmExt(ImmExt_ID), .hazard_f(hazard_f), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), 
 		.PCSrc(PCSrc_ID), .Jump(Jump_ID), .OpCode1_0(OpCode1_0_ID),.DMemEn(DMemEn_ID), .DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), 
-		.RegWriteOut(RegWriteOut_ID), .ALUSrc2(ALUSrc2_ID),
+		.RegWriteOut(RegWriteOut_ID), .ALUSrc2(ALUSrc2_ID), .Halt_n(Halt_n),
 		//inputs
-		.Inst(Inst_IF_ID), .Halt_n(), .clk(clk), .rst(rst), .writeRegSelIn(writeRegSelOut_MEM_WB), .writeData(writeData_WB), .RegWriteIn(CtrlOut_MEM_WB[0]), .writeRegSel_ID_EX(writeRegSelOut_ID_EX),
+		.Inst(Inst_IF_ID), .clk(clk), .rst(rst), .writeRegSelIn(writeRegSelOut_MEM_WB), .writeData(writeData_WB), .RegWriteIn(CtrlOut_MEM_WB[0]), .writeRegSel_ID_EX(writeRegSelOut_ID_EX),
 		.writeRegSel_EX_MEM(writeRegSelOut_EX_MEM), .writeRegSel_MEM_WB(writeRegSelOut_MEM_WB), .RegWrite_ID_EX(CtrlOut_ID_EX[0]), .RegWrite_EX_MEM(CtrlOut_EX_MEM[0]), .RegWrite_MEM_WB(CtrlOut_MEM_WB[0]));
 
 
