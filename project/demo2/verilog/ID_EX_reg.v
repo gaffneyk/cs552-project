@@ -1,7 +1,19 @@
-module ID_EX_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData1Out, ReadData2Out, ImmExtOut, errOut);
+module ID_EX_reg(clk, rst, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite, PCAdd2In, WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData1Out, ReadData2Out, ImmExtOut, errOut);
 
 	input clk, rst;
-	input [15:0] CtrlIn;
+	input ALUSrc2;
+	input [3:0] ALUCtrl;
+	input PCImm;
+	input PCSrc;
+	input Jump;
+	input [1:0] Opcode1_0;
+	input DMemEn;
+	input DMemWrite;
+	input DMemDump;
+	input MemToReg;
+	input WriteDataSel;
+	input RegWrite;
+
 	input [15:0] PCAdd2In;
 	input [2:0] WriteRegSelIn;
 	input [15:0] ReadData1In;
@@ -24,7 +36,7 @@ module ID_EX_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData1In, ReadDat
 		.clk(clk),
 		.rst(rst),
 		.err(Ctrl_err),
-		.writeData(CtrlIn),
+		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite}),
 		.readData(CtrlOut),
 		.writeEn(1'b1));
 
