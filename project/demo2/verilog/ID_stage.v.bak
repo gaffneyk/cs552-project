@@ -3,10 +3,10 @@ module ID_stage (
 		//outputs
 		writeRegSelOut, readData1, readData2, ImmExt, hazard_f, branch_f, ALUCtrl, PCImm, PCSrc, Jump, OpCode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWriteOut, ALUSrc2,
 		//inputs
-		Inst, Halt_n, clk, rst, writeRegSelIn, writeData, RegWriteIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
+		branch_det, Inst, Halt_n, clk, rst, writeRegSelIn, writeData, RegWriteIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
 		);
 
-	input		Halt_n, clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB;
+	input		branch_det, Halt_n, clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB;
 	input [2:0]	writeRegSelIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB;
 	input [15:0]	Inst, writeData;
 
@@ -55,13 +55,13 @@ module ID_stage (
 			((Reg2Sel == writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0;
 
 	//RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH
-	assign RegWriteOut = (hazard_f) ? 1'b0 : RegWriteH;
-	assign DMemWrite = (hazard_f) ? 1'b0 : DMemWriteH;
-	assign DMemEn = (hazard_f) ? 1'b0 : DMemEnH;
-	assign PCSrc = (hazard_f) ? 1'b0 : PCSrcH;
-	assign DMemDump = (hazard_f) ? 1'b0 : DMemDumpH;
-	assign PCImm = (hazard_f) ? 1'b0 : PCImmH;
-	assign Jump = (hazard_f) ? 1'b0 : JumpH;	
+	assign RegWriteOut = (hazard_f | branch_det) ? 1'b0 : RegWriteH;
+	assign DMemWrite = (hazard_f | branch_det) ? 1'b0 : DMemWriteH;
+	assign DMemEn = (hazard_f | branch_det) ? 1'b0 : DMemEnH;
+	assign PCSrc = (hazard_f | branch_det) ? 1'b0 : PCSrcH;
+	assign DMemDump = (hazard_f | branch_det) ? 1'b0 : DMemDumpH;
+	assign PCImm = (hazard_f | branch_det) ? 1'b0 : PCImmH;
+	assign Jump = (hazard_f | branch_det) ? 1'b0 : JumpH;	
 
 
 endmodule

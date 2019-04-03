@@ -106,7 +106,7 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 		.PCAdd2(PCAdd2Out_MEM_WB), .WriteDataSel(CtrlOut_MEM_WB[1]), .ALU_Out(ALUOutOut_MEM_WB), .DMemData(DMemDataOut_MEM_WB), .MemToReg(CtrlOut_MEM_WB[2]));
 
 
-//assign err = (PCErr | PCrca2Err | CtrlErr | RFErr) & ~rst;
+assign err = (PCErr | PCrca2Err | CtrlErr | RFErr) & ~rst;
 
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
