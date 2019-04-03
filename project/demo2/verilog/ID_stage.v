@@ -16,7 +16,8 @@ module ID_stage (
 	output [3:0] 	ALUCtrl;
 	output [15:0]	readData1, readData2, ImmExt;
 	
-	wire		RegDst, Halt_n, RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH;
+	wire	 Halt_n, RegWriteH, DMemWriteH, DMemEnH, PCSrcH, DMemDumpH, PCImmH, JumpH;
+	wire [1:0] RegDst;
 	wire [2:0]	SESel, Reg1Sel, Reg2Sel;
 	wire [15:0]	Inst, ZEx5bOut, ZEx8bOut, SEx5bOut, SEx8bOut, SEx11bOut;
 
