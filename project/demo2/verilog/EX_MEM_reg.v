@@ -27,10 +27,11 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	wire Ctrl_err, PCAdd2_err, ReadData2_err, ALUOut_err, PCImmAdd_err, aux_err;
 	wire [15:0] aux_reg_out;
+	wire [15:0] rst_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
 		.readData(CtrlOut),
@@ -38,7 +39,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -46,7 +47,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -54,7 +55,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ALUOut_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
@@ -62,7 +63,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCImmAdd_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(PCImmAdd_err),
 		.writeData(PCImmAddIn),
 		.readData(PCImmAddOut),
@@ -70,21 +71,29 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register aux_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(aux_err),
-		.writeData({8'b0, Halt_nIn, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
+		.writeData({9'b0, Halt_nIn, MSBIn, ZeroIn, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
 
-	assign Halt_nOut = aux_reg_out[7];
+	register rst_reg(
+		.clk(clk),
+		.rst(1'b0),
+		.err(),
+		.writeData({15'b0, rstIn}),
+		.readData(rst_reg_out),
+		.writeEn(1'b1));
 
-	assign MSBOut = aux_reg_out[6];
+	assign rstOut = rst_reg_out[0];
 
-	assign ZeroOut = aux_reg_out[5];
+	assign Halt_nOut = aux_reg_out[6];
 
-	assign WriteRegSelOut = aux_reg_out[4:2];
+	assign MSBOut = aux_reg_out[5];
 
-	assign rstOut = aux_reg_out[1];
+	assign ZeroOut = aux_reg_out[4];
+
+	assign WriteRegSelOut = aux_reg_out[3:1];
 
 	assign errOut = (Ctrl_err | PCAdd2_err | ReadData2_err | ALUOut_err | PCImmAdd_err | aux_err | aux_reg_out[0]) & ~rstOut;
 

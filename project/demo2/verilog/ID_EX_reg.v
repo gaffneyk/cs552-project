@@ -36,10 +36,11 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	wire Ctrl_err, PCAdd2_err, ReadData1_err, ReadData2_err, ImmExt_err, aux_err;
 	wire [15:0] aux_reg_out;
+	wire [15:0] rst_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite & ~rstIn}),
 		.readData(CtrlOut),
@@ -47,7 +48,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -55,7 +56,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData1_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(ReadData1_err),
 		.writeData(ReadData1In),
 		.readData(ReadData1Out),
@@ -63,7 +64,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -71,7 +72,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ImmExt_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(ImmExt_err),
 		.writeData(ImmExtIn),
 		.readData(ImmExtOut),
@@ -79,17 +80,25 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register aux_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(aux_err),
-		.writeData({10'b0, Halt_nIn, WriteRegSelIn, rstIn, errIn}),
+		.writeData({11'b0, Halt_nIn, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
 
-	assign Halt_nOut = aux_reg_out[5];
+	register rst_reg(
+		.clk(clk),
+		.rst(1'b0),
+		.err(),
+		.writeData({15'b0, rstIn}),
+		.readData(rst_reg_out),
+		.writeEn(1'b1));
 
-	assign WriteRegSelOut = aux_reg_out[4:2];
+	assign rstOut = rst_reg_out[0];
 
-	assign rstOut = aux_reg_out[1];
+	assign Halt_nOut = aux_reg_out[4];
+
+	assign WriteRegSelOut = aux_reg_out[3:1];
 
 	assign errOut = (Ctrl_err | PCAdd2_err | ReadData1_err | ReadData2_err | ImmExt_err | aux_err | aux_reg_out[0]) & ~rstOut;
 
