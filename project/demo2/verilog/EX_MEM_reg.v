@@ -73,7 +73,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.clk(clk),
 		.rst(rstIn),
 		.err(aux_err),
-		.writeData({9'b0, Halt_nIn, MSBIn, ZeroIn, WriteRegSelIn, errIn}),
+		.writeData({10'b0, MSBIn, ZeroIn, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
 
@@ -81,13 +81,13 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({15'b0, rstIn}),
+		.writeData({14'b0, Halt_nIn, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
 
-	assign rstOut = rst_reg_out[0];
+	assign Halt_nOut = rst_reg_out[1];
 
-	assign Halt_nOut = aux_reg_out[6];
+	assign rstOut = rst_reg_out[0];
 
 	assign MSBOut = aux_reg_out[5];
 
