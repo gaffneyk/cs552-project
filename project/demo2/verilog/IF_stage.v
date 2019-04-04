@@ -13,7 +13,7 @@ module IF_stage (
 
 	wire		branch_det, no_hazard;
 	wire [1:0]	PC_sel;
-	wire [15:0]	PCUpdate, PCAddr, Inst_B;
+	wire [15:0]	PCUpdate, PCAddr, Inst_B, PCUpdateH2;
 
 	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
@@ -23,8 +23,10 @@ module IF_stage (
 	
 	assign no_hazard = branch_det !== 1'b1 & hazard_f !== 1'b1;
 	assign PC_sel = no_hazard ? 2'b00 : {branch_det, hazard_f};
+	assign PCUpdateH2 = (|PCUpdateH === 1'bx) ? PCAdd2 : PCUpdateH;
 
-	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
+
+	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH2), .InD(PCUpdateH2), .S(PC_sel), .Out(PCUpdate));
 
 	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1);
 
