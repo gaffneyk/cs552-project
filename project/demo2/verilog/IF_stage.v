@@ -3,10 +3,10 @@ module IF_stage (
 		//outputs
 		PCAdd2, Inst,
 		//inputs
-		hazard_f, branch_ID, branch_EX, clk, rst, PCUpdateH, Halt_n
+		hazard_f, branch_ID, branch_EX, branch_MEM, clk, rst, PCUpdateH, Halt_n
 		);
 
-	input 		hazard_f, branch_ID, branch_EX, clk, rst, Halt_n;
+	input 		hazard_f, branch_ID, branch_EX, branch_MEM, clk, rst, Halt_n;
 	input [15:0]	PCUpdateH;
 
 	output [15:0]	PCAdd2, Inst;
@@ -26,7 +26,7 @@ module IF_stage (
 
 	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
 
-	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1);
+	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
 
 	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(branch_det), .Out(Inst));
 	
