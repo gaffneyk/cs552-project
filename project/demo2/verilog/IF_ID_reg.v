@@ -1,6 +1,7 @@
-module IF_ID_reg(clk, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut, errOut);
+module IF_ID_reg(clk, hazard_f, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut, errOut);
 
 	input clk;
+	input hazard_f;
 	input [15:0] PCAdd2In;
 	input [15:0] InstIn;
 	input rstIn;
@@ -20,7 +21,7 @@ module IF_ID_reg(clk, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
-		.writeEn(1'b1));
+		.writeEn(~hazard_f));
 
 	register Inst_reg(
 		.clk(clk),
@@ -28,7 +29,7 @@ module IF_ID_reg(clk, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut
 		.err(Inst_err),
 		.writeData(InstIn),
 		.readData(InstOut),
-		.writeEn(1'b1));
+		.writeEn(~hazard_f));
 
 	register aux_reg(
 		.clk(clk),
@@ -36,7 +37,7 @@ module IF_ID_reg(clk, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstOut, rstOut
 		.err(aux_err),
 		.writeData({14'b0, rstIn, errIn}),
 		.readData(aux_reg_out),
-		.writeEn(1'b1));
+		.writeEn(~hazard_f));
 
 	assign rstOut = aux_reg_out[1];
 

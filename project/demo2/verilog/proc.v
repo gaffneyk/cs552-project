@@ -46,7 +46,7 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 	IF_ID_reg IF_ID (//outputs
 		.PCAdd2Out(PCAdd2Out_IF_ID), .InstOut(Inst_IF_ID), .rstOut(rst_IF_ID), .errOut(),
 		//inputs
-		.clk(clk), .PCAdd2In(PCAdd2Out_IF), .InstIn(Inst_IF), .rstIn(rst), .errIn());
+		.clk(clk), .hazard_f(hazard_f), .PCAdd2In(PCAdd2Out_IF), .InstIn(Inst_IF), .rstIn(rst), .errIn());
 
 
 
