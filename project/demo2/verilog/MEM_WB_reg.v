@@ -56,7 +56,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 		.clk(clk),
 		.rst(1'b0),
 		.err(aux_err),
-		.writeData({11'b0, WriteRegSelIn, rstOut, errIn}),
+		.writeData({11'b0, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
 
