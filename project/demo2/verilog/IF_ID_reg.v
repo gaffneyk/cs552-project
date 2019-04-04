@@ -17,7 +17,7 @@ module IF_ID_reg(clk, hazard_f, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstO
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -25,7 +25,7 @@ module IF_ID_reg(clk, hazard_f, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstO
 
 	register Inst_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(Inst_err),
 		.writeData(InstIn),
 		.readData(InstOut),
@@ -33,7 +33,7 @@ module IF_ID_reg(clk, hazard_f, PCAdd2In, InstIn, rstIn, errIn, PCAdd2Out, InstO
 
 	register aux_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rstIn),
 		.err(aux_err),
 		.writeData({14'b0, rstIn, errIn}),
 		.readData(aux_reg_out),
