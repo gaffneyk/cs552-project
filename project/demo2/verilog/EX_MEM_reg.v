@@ -28,7 +28,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
 		.readData(CtrlOut),
@@ -36,7 +36,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -44,7 +44,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -52,7 +52,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ALUOut_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
@@ -60,7 +60,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCImmAdd_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(PCImmAdd_err),
 		.writeData(PCImmAddIn),
 		.readData(PCImmAddOut),
@@ -68,7 +68,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register aux_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(aux_err),
 		.writeData({9'b0, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
@@ -82,6 +82,6 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	assign rstOut = aux_reg_out[1];
 
-	assign errOut = (Ctrl_err | PCAdd2_err | ReadData2_err | ALUOut_err | PCImmAdd_err | aux_err | aux_reg_out[0]) & ~rst;
+	assign errOut = (Ctrl_err | PCAdd2_err | ReadData2_err | ALUOut_err | PCImmAdd_err | aux_err | aux_reg_out[0]) & ~rstOut;
 
 endmodule

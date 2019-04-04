@@ -37,7 +37,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite}),
 		.readData(CtrlOut),
@@ -45,7 +45,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -53,7 +53,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData1_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ReadData1_err),
 		.writeData(ReadData1In),
 		.readData(ReadData1Out),
@@ -61,7 +61,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -69,7 +69,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ImmExt_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ImmExt_err),
 		.writeData(ImmExtIn),
 		.readData(ImmExtOut),
@@ -77,7 +77,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register aux_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(aux_err),
 		.writeData({11'b0, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
@@ -87,6 +87,6 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	assign rstOut = aux_reg_out[1];
 
-	assign errOut = (Ctrl_err | PCAdd2_err | ReadData1_err | ReadData2_err | ImmExt_err | aux_err | aux_reg_out[0]) & ~rst;
+	assign errOut = (Ctrl_err | PCAdd2_err | ReadData1_err | ReadData2_err | ImmExt_err | aux_err | aux_reg_out[0]) & ~rstOut;
 
 endmodule

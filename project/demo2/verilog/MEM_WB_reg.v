@@ -22,7 +22,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
 		.readData(CtrlOut),
@@ -30,7 +30,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -38,7 +38,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	register ALUOut_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
@@ -46,7 +46,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	register DMemData_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(DMemData_err),
 		.writeData(DMemDataIn),
 		.readData(DMemDataOut),
@@ -54,7 +54,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	register aux_reg(
 		.clk(clk),
-		.rst(rst),
+		.rst(rstIn),
 		.err(aux_err),
 		.writeData({11'b0, WriteRegSelIn, rstOut, errIn}),
 		.readData(aux_reg_out),
@@ -64,6 +64,6 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn, rs
 
 	assign rstOut = aux_reg_out[1];
 
-	assign errOut = (Ctrl_err | PCAdd2_err | ALUOut_err | DMemData_err | aux_err | aux_reg_out[0]) & ~rst;
+	assign errOut = (Ctrl_err | PCAdd2_err | ALUOut_err | DMemData_err | aux_err | aux_reg_out[0]) & ~rstOut;
 
 endmodule
