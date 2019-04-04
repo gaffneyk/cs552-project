@@ -11,7 +11,7 @@ module IF_stage (
 
 	output [15:0]	PCAdd2, Inst;
 
-	wire		branch_det;
+	wire		branch_det, no_hazard;
 	wire [1:0]	PC_sel;
 	wire [15:0]	PCUpdate, PCAddr, Inst_B;
 
@@ -21,7 +21,9 @@ module IF_stage (
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 	
-	assign PC_sel = {branch_det, hazard_f};
+	assign no_hazard = branch_det === 1'bx & hazard_f === 1'bx;
+	assign PC_sel = no_hazard ? 2'b00 : {branch_det, hazard_f};
+
 	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
 
 	assign	branch_det = (branch_ID | branch_EX);
