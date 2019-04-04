@@ -26,7 +26,7 @@ module IF_stage (
 
 	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
 
-	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1);
+	assign	branch_det = (branch_ID | branch_EX);
 
 	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(branch_det), .Out(Inst));
 	
