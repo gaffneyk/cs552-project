@@ -1,6 +1,6 @@
-module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, Halt_nOut, rstOut, errOut);
+module EX_MEM_reg(clk, rst, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, Halt_nOut, rstOut, errOut);
 
-	input clk;
+	input clk, rst;
 	input [15:0] CtrlIn;
 	input [15:0] PCAdd2In;
 	input [15:0] ReadData2In;
@@ -30,7 +30,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
 		.readData(CtrlOut),
@@ -38,7 +38,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -46,7 +46,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -54,7 +54,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register ALUOut_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
@@ -62,7 +62,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register PCImmAdd_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(PCImmAdd_err),
 		.writeData(PCImmAddIn),
 		.readData(PCImmAddOut),
@@ -70,7 +70,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 
 	register aux_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(aux_err),
 		.writeData({8'b0, Halt_nIn, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),

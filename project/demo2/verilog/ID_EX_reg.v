@@ -1,6 +1,6 @@
-module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite, PCAdd2In, WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData1Out, ReadData2Out, ImmExtOut, Halt_nOut, rstOut, errOut);
+module ID_EX_reg(clk, rst, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite, PCAdd2In, WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData1Out, ReadData2Out, ImmExtOut, Halt_nOut, rstOut, errOut);
 
-	input clk;
+	input clk, rst;
 
 	input ALUSrc2;			// 15
 	input [3:0] ALUCtrl;	// 14:11
@@ -39,7 +39,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register Ctrl_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(Ctrl_err),
 		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite}),
 		.readData(CtrlOut),
@@ -47,7 +47,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register PCAdd2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
@@ -55,7 +55,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData1_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(ReadData1_err),
 		.writeData(ReadData1In),
 		.readData(ReadData1Out),
@@ -63,7 +63,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ReadData2_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
@@ -71,7 +71,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register ImmExt_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(ImmExt_err),
 		.writeData(ImmExtIn),
 		.readData(ImmExtOut),
@@ -79,7 +79,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, D
 
 	register aux_reg(
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.err(aux_err),
 		.writeData({10'b0, Halt_nIn, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
