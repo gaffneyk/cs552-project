@@ -21,7 +21,7 @@ module IF_stage (
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 	
-	assign no_hazard = branch_det === 1'bx & hazard_f === 1'bx;
+	assign no_hazard = branch_det !== 1'b1 & hazard_f !== 1'b1;
 	assign PC_sel = no_hazard ? 2'b00 : {branch_det, hazard_f};
 
 	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
