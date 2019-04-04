@@ -55,7 +55,7 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 		.PCSrc(PCSrc_ID), .Jump(Jump_ID), .OpCode1_0(OpCode1_0_ID),.DMemEn(DMemEn_ID), .DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), 
 		.RegWriteOut(RegWriteOut_ID), .ALUSrc2(ALUSrc2_ID), .Halt_n(Halt_n),
 		//inputs
-		.Inst(Inst_IF_ID), .clk(clk), .rst(rst), .writeRegSelIn(writeRegSelOut_MEM_WB), .writeData(writeData_WB), .RegWriteIn(CtrlOut_MEM_WB[0]), .writeRegSel_ID_EX(writeRegSelOut_ID_EX),
+		.Inst(Inst_IF_ID), .clk(clk), .rst(rst_IF_ID), .writeRegSelIn(writeRegSelOut_MEM_WB), .writeData(writeData_WB), .RegWriteIn(CtrlOut_MEM_WB[0]), .writeRegSel_ID_EX(writeRegSelOut_ID_EX),
 		.writeRegSel_EX_MEM(writeRegSelOut_EX_MEM), .writeRegSel_MEM_WB(writeRegSelOut_MEM_WB), .RegWrite_ID_EX(CtrlOut_ID_EX[0]), .RegWrite_EX_MEM(CtrlOut_EX_MEM[0]), .RegWrite_MEM_WB(CtrlOut_MEM_WB[0]));
 
 
@@ -89,7 +89,7 @@ wire		PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID, DMemDump_I
 	MEM_stage MEM (//outputs
 		.DMemData(DMemData_MEM), .PCUpdate(PCUpdateMEM),
 		//inputs
-		.clk(clk), .rst(rst), .MSB(MSBOut_EX_MEM), .Zero(ZeroOut_EX_MEM), .readData2(ReadData2Out_EX_MEM), .ALU_Out(ALUOutOut_EX_MEM), .DMemEn(CtrlOut_EX_MEM[5]), 
+		.clk(clk), .rst(rst_EX_MEM), .MSB(MSBOut_EX_MEM), .Zero(ZeroOut_EX_MEM), .readData2(ReadData2Out_EX_MEM), .ALU_Out(ALUOutOut_EX_MEM), .DMemEn(CtrlOut_EX_MEM[5]), 
 		.DMemWrite(CtrlOut_EX_MEM[4]), .DMemDump(CtrlOut_EX_MEM[3]), .PCAdd2(PCAdd2Out_EX_MEM), .PCImmAdd(PCImmAddOut_EX_MEM), .PCImm(CtrlOut_EX_MEM[10]), .PCSrc(CtrlOut_EX_MEM[9]), 
 		.Jump(CtrlOut_EX_MEM[8]), .OpCode1_0(CtrlOut_EX_MEM[7:6]));
 
