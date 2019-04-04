@@ -1,4 +1,4 @@
-module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, rstOut, errOut);
+module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, Halt_nOut, rstOut, errOut);
 
 	input clk;
 	input [15:0] CtrlIn;
@@ -9,6 +9,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 	input MSBIn;
 	input ZeroIn;
 	input [2:0] WriteRegSelIn;
+	input Halt_nIn;
 	input rstIn;
 	input errIn;
 
@@ -20,6 +21,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 	output MSBOut;
 	output ZeroOut;
 	output [2:0] WriteRegSelOut;
+	output Halt_nOut;
 	output rstOut;
 	output errOut;
 
@@ -70,9 +72,11 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.clk(clk),
 		.rst(1'b0),
 		.err(aux_err),
-		.writeData({9'b0, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
+		.writeData({8'b0, Halt_nIn, MSBIn, ZeroIn, WriteRegSelIn, rstIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(1'b1));
+
+	assign Halt_nOut = aux_reg_out[7];
 
 	assign MSBOut = aux_reg_out[6];
 
