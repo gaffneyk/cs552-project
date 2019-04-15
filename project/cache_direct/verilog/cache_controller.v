@@ -71,9 +71,11 @@ module cache_controller(
 	assign state_rd = reg_wr_rd_out[0];
 
 	always @(current_state or clk)
-	casex (current_state[3:0])
+	casex ({current_state[3:0], clk})
 	
-	4'b0000: begin // Idle
+	4'b????0: begin next_state = current_state; end
+
+	4'b00001: begin // Idle
 		reg_en = 1;
 		done = 1;
 		next_state = (rd_in == 1) ?
@@ -83,7 +85,7 @@ module cache_controller(
 		: 4'b0000;
 	end
 
-	4'b0001: begin // Compare Read
+	4'b00011: begin // Compare Read
 		reg_en = 0;
 		done = 0;
 		comp = 1;
@@ -98,7 +100,7 @@ module cache_controller(
 		: 4'b0000;
 	end
 
-	4'b0010: begin // Compare Write
+	4'b00101: begin // Compare Write
 		reg_en = 0;
 		done = 0;
 		comp = 1;
@@ -113,7 +115,7 @@ module cache_controller(
 		: 4'b0000;
 	end
 
-	4'b0011: begin // Access Read 0
+	4'b00111: begin // Access Read 0
 		cache_offset = 3'b000;
 		mem_offset = 3'b000;
 		comp = 0;
@@ -124,25 +126,25 @@ module cache_controller(
 		next_state = 4'b0100; // -> Access Read 1
 	end
 
-	4'b0100: begin // Access Read 1
+	4'b01001: begin // Access Read 1
 		cache_offset = 3'b010;
 		mem_offset = 3'b010;
 		next_state = 4'b0101; // -> Access Read 2
 	end
 
-	4'b0101: begin // Access Read 2
+	4'b01011: begin // Access Read 2
 		cache_offset = 3'b100;
 		mem_offset = 3'b100;
 		next_state = 4'b0110; // -> Access Read 3
 	end
 
-	4'b0110: begin // Access Read 3
+	4'b01101: begin // Access Read 3
 		cache_offset = 3'b110;
 		mem_offset = 3'b110;
 		next_state = 4'b0111; // -> Request 0
 	end
 
-	4'b0111: begin // Request 0
+	4'b01111: begin // Request 0
 		mem_offset = 3'b000;
 		tag_src = 0;
 		wr_out = 0;
@@ -150,12 +152,12 @@ module cache_controller(
 		next_state = 4'b1000; // -> Request 1
 	end
 
-	4'b1000: begin // Request 1
+	4'b10001: begin // Request 1
 		mem_offset = 3'b010;
 		next_state = 4'b1001; // -> Request 2, Access Write 0
 	end
 
-	4'b1001: begin // Request 2, Access Write 0
+	4'b10011: begin // Request 2, Access Write 0
 		cache_offset = 3'b000;
 		mem_offset = 3'b100;
 		comp = 0;
@@ -164,18 +166,18 @@ module cache_controller(
 		next_state = 4'b1010; // -> Request 3, Access Write 1
 	end
 
-	4'b1010: begin // Request 3, Access Write 1
+	4'b10101: begin // Request 3, Access Write 1
 		cache_offset = 3'b010;
 		mem_offset = 3'b110;
 		next_state = 4'b1011; // -> Access Write 2
 	end
 
-	4'b1011: begin // Access Write 2
+	4'b10111: begin // Access Write 2
 		cache_offset = 3'b100;
 		next_state = 4'b1100; // -> Access Write 3
 	end
 
-	4'b1100: begin // Access Write 3
+	4'b11001: begin // Access Write 3
 		cache_offset = 3'b110;
 		next_state = (state_rd & ~state_wr) ?
 			4'b0000 // -> Idle
