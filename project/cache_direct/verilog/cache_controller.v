@@ -42,7 +42,7 @@ module cache_controller(
 		.readData(current_state),
 		.err(reg_state_err),
 		// Inputs
-		.writeData(next_state),
+		.writeData({12'b0, next_state}),
 		.writeEn(1'b1),
 		.clk(clk),
 		.rst(rst));
