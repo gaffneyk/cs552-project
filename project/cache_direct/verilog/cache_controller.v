@@ -73,7 +73,7 @@ module cache_controller(
 	always @(current_state or clk)
 	casex ({current_state[3:0], clk})
 	
-	4'b????0: begin next_state = current_state; end
+	4'b????0: begin end
 
 	4'b00001: begin // Idle
 		reg_en = 1;
