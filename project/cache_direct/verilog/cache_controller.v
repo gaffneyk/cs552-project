@@ -70,7 +70,7 @@ module cache_controller(
 	assign state_wr = reg_wr_rd_out[1];
 	assign state_rd = reg_wr_rd_out[0];
 
-	always @(current_state)
+	always @(current_state or clk)
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
