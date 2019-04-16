@@ -45,6 +45,7 @@ module mem_system(/*AUTOARG*/
          cache_dirty_out,
          cache_hit_out,
          cache_err,
+         cache_enable,
          mem_err,
          ctrl_err;
 
@@ -60,7 +61,7 @@ module mem_system(/*AUTOARG*/
         .valid                (cache_valid_out),
         .err                  (cache_err),
         // Inputs
-        .enable               (~Done),
+        .enable               (cache_enable),
         .clk                  (clk),
         .rst                  (rst),
         .createdump           (createdump),
@@ -96,6 +97,7 @@ module mem_system(/*AUTOARG*/
         .addr_out(ctrl_addr_out),
         .data_out(ctrl_data_out),
         .cache_offset(cache_offset),
+        .cache_enable(cache_enable),
         .mem_offset(mem_offset),
         .write(ctrl_write),
         .comp(ctrl_comp),
