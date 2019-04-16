@@ -178,11 +178,7 @@ module cache_controller(
 
 	4'b1100: begin // Access Write 3
 		cache_offset = 3'b110;
-		next_state = (state_rd & ~state_wr) ?
-			4'b0000 // -> Idle
-		: (state_wr & ~ state_rd) ?
-			4'b0010 // -> Compare Write
-		: 4'b0000;
+		next_state = 4'b1101;
 	end
 
 	4'b1101: begin // Done
