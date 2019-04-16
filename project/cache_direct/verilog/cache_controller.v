@@ -1,7 +1,8 @@
 module cache_controller(
 	// Outputs
 	addr_out, data_out, cache_offset, cache_enable, mem_offset, 
-	write, comp, wr_out, rd_out, data_src, tag_src, done, stall, err,
+	write, comp, wr_out, rd_out, data_src, tag_src, done, stall, 
+	mem_system_cache_hit, err,
 	// Inputs
 	addr_in, data_in, rd_in, wr_in, cache_valid, cache_dirty,
 	cache_hit, clk, rst
@@ -25,7 +26,7 @@ module cache_controller(
 				 mem_offset;
 
 	output reg done, comp, write, wr_out, rd_out, data_src, tag_src, 
-		cache_enable, stall, err;
+		cache_enable, stall, mem_system_cache_hit, err;
 
 	wire [15:0] current_state, reg_wr_rd_out;
 	reg [15:0] next_state;
@@ -82,46 +83,32 @@ module cache_controller(
 	assign state_wr = reg_wr_rd_out[1];
 	assign state_rd = reg_wr_rd_out[0];
 
-	always @(current_state or rd_in or wr_in or cache_hit or cache_valid)
+	always @(clk or rd_in or wr_in)
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
 		done = 0;
 		stall = 0;
 		reg_en = 1;
-		next_state = (rd_in & ~wr_in) ?
-			4'b0001 // -> Compare Read
-		: (~rd_in & wr_in) ?
-			4'b0010 // -> Compare Write
+		next_state = (rd_in | wr_in) ?
+			4'b0001 // -> Compare
 		: 4'b0000; // -> Idle
 	end
 
-	4'b0001: begin // Compare Read
+	4'b0001: begin // Compare
 		stall = 1;
 		reg_en = 0;
-		tag_src = 0;
 		cache_offset = addr_out[2:0];
 		cache_enable = 1;
 		comp = 1;
-		write = 0;
-		next_state = (cache_hit & cache_valid) ?
-			4'b1101 // -> Done
-		: (~cache_hit & cache_valid & cache_dirty) ?
-			4'b0011 // -> Access Read 0
-		: 4'b0111; // -> Request 0
-	end
+		write = state_wr ? 1 : 0;
 
-	4'b0010: begin // Compare Write
-		stall = 1;
-		reg_en = 0;
-		tag_src = 0;
-		cache_offset = addr_out[2:0];
-		cache_enable = 1;
-		comp = 1;
-		write = 1;
-		data_src = 0;
+		Done = (cache_hit & cache_valid) ? 1 : 0;
+
+		mem_system_cache_hit = (cache_hit & cache_valid) ? 1 : 0;
+
 		next_state = (cache_hit & cache_valid) ?
-			4'b1101 // -> Done
+			4'b0000 // -> Idle
 		: (~cache_hit & cache_valid & cache_dirty) ?
 			4'b0011 // -> Access Read 0
 		: 4'b0111; // -> Request 0
@@ -200,6 +187,9 @@ module cache_controller(
 
 	4'b1101: begin // Done
 		done = 1;
+		cache_offset = addr_out[2:0];
+		comp = 1;
+		write = state_wr ? 1 : 0;
 		next_state = 4'b0000; // -> Idle
 	end
 
