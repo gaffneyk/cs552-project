@@ -43,7 +43,7 @@ module cache_controller(
 		.readData(current_state),
 		.err(reg_state_err),
 		// Inputs
-		.writeData({12'b0, next_state}),
+		.writeData(next_state),
 		.writeEn(1'b1),
 		.clk(clk),
 		.rst(rst));
@@ -92,7 +92,7 @@ module cache_controller(
 			4'b1101 // -> Done
 		: (~cache_hit & cache_valid & cache_dirty) ?
 			4'b0011 // -> Access Read 0
-		: 4'b0111 // -> Request 0
+		: 4'b0111; // -> Request 0
 	end
 
 	4'b0010: begin // Compare Write
@@ -104,7 +104,7 @@ module cache_controller(
 			4'b1101 // -> Done
 		: (~cache_hit & cache_valid & cache_dirty) ?
 			4'b0011 // -> Access Read 0
-		: 4'b0111 // -> Request 0
+		: 4'b0111; // -> Request 0
 	end
 
 	4'b0011: begin // Access Read 0
