@@ -31,6 +31,7 @@ module cache_controller(
 	reg [15:0] next_state;
 
 	wire reg_addr_err,
+	     reg_data_err,
 		 reg_state_err,
 		 reg_wr_rd_err,
 		 state_wr,
@@ -54,6 +55,16 @@ module cache_controller(
 		.err(reg_addr_err),
 		// Inputs
 		.writeData(addr_in),
+		.writeEn(reg_en),
+		.clk(clk),
+		.rst(rst));
+
+	register reg_data(
+		// Outputs
+		.readData(data_out),
+		.err(reg_data_err),
+		// Inputs
+		.writeData(data_in),
 		.writeEn(reg_en),
 		.clk(clk),
 		.rst(rst));
