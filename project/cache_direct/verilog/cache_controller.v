@@ -76,6 +76,7 @@ module cache_controller(
 	
 	4'b0000: begin // Idle
 		done = 0;
+		reg_en = 1;
 		next_state = (rd_in & ~wr_in) ?
 			4'b0001 // -> Compare Read
 		: (~rd_in & wr_in) ?
@@ -84,6 +85,7 @@ module cache_controller(
 	end
 
 	4'b0001: begin // Compare Read
+		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
@@ -96,6 +98,7 @@ module cache_controller(
 	end
 
 	4'b0010: begin // Compare Write
+		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
