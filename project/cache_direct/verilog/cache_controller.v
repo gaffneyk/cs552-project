@@ -119,7 +119,7 @@ module cache_controller(
 		cache_enable = 1;
 		comp = 1;
 		write = 1;
-		$display(cache_hit, cache_valid);
+		data_src = 0;
 		next_state = (cache_hit & cache_valid) ?
 			4'b1101 // -> Done
 		: (~cache_hit & cache_valid & cache_dirty) ?
