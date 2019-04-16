@@ -183,6 +183,7 @@ module cache_controller(
 
 	4'b1101: begin // Done
 		done = 1;
+		data_src = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
 		write = state_wr ? 1 : 0;
