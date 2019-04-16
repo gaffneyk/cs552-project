@@ -76,7 +76,7 @@ module mem_system(/*AUTOARG*/
     four_bank_mem mem(
         // Outputs
         .data_out          (mem_data_out),
-        .stall             (Stall),
+        .stall             (),
         .busy              (),
         .err               (mem_err),
         // Inputs
@@ -106,6 +106,7 @@ module mem_system(/*AUTOARG*/
         .data_src(data_src),
         .tag_src(tag_src),
         .done(Done),
+        .stall(Stall),
         .err(ctrl_err),
         // Inputs
         .addr_in(Addr),

@@ -1,7 +1,7 @@
 module cache_controller(
 	// Outputs
 	addr_out, data_out, cache_offset, cache_enable, mem_offset, 
-	write, comp, wr_out, rd_out, data_src, tag_src, done, err,
+	write, comp, wr_out, rd_out, data_src, tag_src, done, stall, err,
 	// Inputs
 	addr_in, data_in, rd_in, wr_in, cache_valid, cache_dirty,
 	cache_hit, clk, rst
@@ -76,6 +76,7 @@ module cache_controller(
 	
 	4'b0000: begin // Idle
 		done = 0;
+		stall = 0;
 		reg_en = 1;
 		next_state = (rd_in & ~wr_in) ?
 			4'b0001 // -> Compare Read
@@ -85,6 +86,7 @@ module cache_controller(
 	end
 
 	4'b0001: begin // Compare Read
+		stall = 1;
 		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
@@ -99,6 +101,7 @@ module cache_controller(
 	end
 
 	4'b0010: begin // Compare Write
+		stall = 1;
 		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
