@@ -88,6 +88,7 @@ module cache_controller(
 		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
+		cache_enable = 1;
 		comp = 1;
 		write = 0;
 		next_state = (cache_hit & cache_valid) ?
@@ -101,6 +102,7 @@ module cache_controller(
 		reg_en = 0;
 		tag_src = 0;
 		cache_offset = addr_out[2:0];
+		cache_enable = 1;
 		comp = 1;
 		write = 1;
 		next_state = (cache_hit & cache_valid) ?
