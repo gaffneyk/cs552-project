@@ -103,7 +103,7 @@ module cache_controller(
 		comp = 1;
 		write = state_wr ? 1 : 0;
 
-		Done = (cache_hit & cache_valid) ? 1 : 0;
+		done = (cache_hit & cache_valid) ? 1 : 0;
 
 		mem_system_cache_hit = (cache_hit & cache_valid) ? 1 : 0;
 
