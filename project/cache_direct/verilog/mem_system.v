@@ -107,6 +107,7 @@ module mem_system(/*AUTOARG*/
         .tag_src(tag_src),
         .done(Done),
         .stall(Stall),
+        .mem_system_cache_hit(CacheHit),
         .err(ctrl_err),
         // Inputs
         .addr_in(Addr),
@@ -157,7 +158,6 @@ module mem_system(/*AUTOARG*/
         .Out(mux_tag_out[4]));
 
     assign DataOut = cache_data_out;
-    assign CacheHit = cache_hit_out;
     assign err = cache_err | mem_err | ctrl_err;
 
 endmodule // mem_system
