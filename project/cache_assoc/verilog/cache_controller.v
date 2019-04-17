@@ -86,7 +86,7 @@ module cache_controller(
 
 	dff victimway(
 		.q(victim_way_out),
-		.d(victim_way_in),
+		.d(rst ? 1'b0 : victim_way_in),
 		.clk(clk),
 		.rst(rst));
 
@@ -102,6 +102,7 @@ module cache_controller(
 		reg_en = 1;
 		rd_out = 0;
 		wr_out = 0;
+		victim_way_in = victim_way_out;
 
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
