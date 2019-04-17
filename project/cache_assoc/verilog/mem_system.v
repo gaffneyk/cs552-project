@@ -172,7 +172,7 @@ module mem_system(/*AUTOARG*/
         .S(tag_src),
         .Out(mux_tag_out[4]));
 
-    assign DataOut = cache_enable ? c0_data_out : c1_data_out;
+    assign DataOut = cache_enable[0] ? c0_data_out : c1_data_out;
     assign err = c0_err | c1_err | mem_err | ctrl_err;
 
    
