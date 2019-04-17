@@ -90,6 +90,8 @@ module cache_controller(
 		done = 0;
 		stall = 0;
 		reg_en = 1;
+		rd_out = 0;
+		wr_out = 0;
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
 		: 4'b0000; // -> Idle
