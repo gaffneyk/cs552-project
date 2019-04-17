@@ -128,31 +128,31 @@ module mem_system(/*AUTOARG*/
         .Out(mux_data_out));
 
     mux2_1 mux_tag_0(
-        .InA(ctrl_addr_out[0]),
+        .InA(ctrl_addr_out[11]),
         .InB(cache_tag_out[0]),
         .S(tag_src),
         .Out(mux_tag_out[0]));
 
     mux2_1 mux_tag_1(
-        .InA(ctrl_addr_out[1]),
+        .InA(ctrl_addr_out[12]),
         .InB(cache_tag_out[1]),
         .S(tag_src),
         .Out(mux_tag_out[1]));
 
     mux2_1 mux_tag_2(
-        .InA(ctrl_addr_out[2]),
+        .InA(ctrl_addr_out[13]),
         .InB(cache_tag_out[2]),
         .S(tag_src),
         .Out(mux_tag_out[2]));
 
     mux2_1 mux_tag_3(
-        .InA(ctrl_addr_out[3]),
+        .InA(ctrl_addr_out[14]),
         .InB(cache_tag_out[3]),
         .S(tag_src),
         .Out(mux_tag_out[3]));
 
     mux2_1 mux_tag_4(
-        .InA(ctrl_addr_out[4]),
+        .InA(ctrl_addr_out[15]),
         .InB(cache_tag_out[4]),
         .S(tag_src),
         .Out(mux_tag_out[4]));
