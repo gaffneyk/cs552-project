@@ -99,20 +99,23 @@ module cache_controller(
 	4'b0000: begin // Idle
 		done = 0;
 		stall = 0;
-		cache_enable = 2'b00;
 		reg_en = 1;
 		rd_out = 0;
 		wr_out = 0;
+
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
 		: 4'b0000; // -> Idle
+
+		cache_enable = (rd_in | wr_in) ?
+			2'b11 // -> Compare
+		: 2'b00; // -> Idle
 	end
 
 	4'b0001: begin // Compare
 		stall = 1;
 		reg_en = 0;
 		cache_offset = addr_out[2:0];
-		cache_enable = 2'b11;
 		comp = 1;
 		write = state_wr ? 1 : 0;
 		victim_way_in = ~victim_way_out;
