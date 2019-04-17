@@ -52,105 +52,105 @@
 //
 //////////////////////////////////////
 
-module final_memory (
-    output [15:0] data_out,
-    output        err,
-    input  [15:0] data_in,
-    input  [12:0] addr,
-    input         wr,
-    input         rd,
-    input         enable,
-    input         create_dump,
-    input   [1:0] bank_id,
-    input         clk,
-    input         rst
-);
+// module final_memory (
+//     output [15:0] data_out,
+//     output        err,
+//     input  [15:0] data_in,
+//     input  [12:0] addr,
+//     input         wr,
+//     input         rd,
+//     input         enable,
+//     input         create_dump,
+//     input   [1:0] bank_id,
+//     input         clk,
+//     input         rst
+// );
 
-    reg     [7:0]  mem [0:32];
-    reg            loaded;
-    reg     [15:0] largest;
+//     reg     [7:0]  mem [0:32];
+//     reg            loaded;
+//     reg     [15:0] largest;
 
-    wire [13:0] addr_1c;
-    wire [15:0] data_in_1c;
+//     wire [13:0] addr_1c;
+//     wire [15:0] data_in_1c;
 
-    integer        mcd;
-    integer        largeout;
-    integer        i;
+//     integer        mcd;
+//     integer        largeout;
+//     integer        i;
 
-    assign rd0 = rd & ~wr & enable & ~rst;
-    assign wr0 = ~rd & wr & enable & ~rst;
+//     assign rd0 = rd & ~wr & enable & ~rst;
+//     assign wr0 = ~rd & wr & enable & ~rst;
 
-//   clkrst clkmod(clk, rst, err);
+// //   clkrst clkmod(clk, rst, err);
    
    
-    dff ff0 (rd1, rd0, clk, rst);
-    dff ff1 (wr1, wr0, clk, rst);
-    dff reg0 [12:0] (addr_1c[12:0], addr, clk, rst);
-    dff reg1 [15:0] (data_in_1c, data_in, clk, rst);
-    assign addr_1c[13]=1'b0;
+//     dff ff0 (rd1, rd0, clk, rst);
+//     dff ff1 (wr1, wr0, clk, rst);
+//     dff reg0 [12:0] (addr_1c[12:0], addr, clk, rst);
+//     dff reg1 [15:0] (data_in_1c, data_in, clk, rst);
+//     assign addr_1c[13]=1'b0;
 
-    wire [15:0] data_out_1c = rd1 ? {mem[addr_1c<<1], mem[(addr_1c<<1)+1]} : 0;
+//     wire [15:0] data_out_1c = rd1 ? {mem[addr_1c<<1], mem[(addr_1c<<1)+1]} : 0;
 
-    dff reg2 [15:0] (data_out, data_out_1c, clk, rst);
+//     dff reg2 [15:0] (data_out, data_out_1c, clk, rst);
 
-    dff ff2 (rd2, rd1, clk, rst);
-    dff ff3 (wr2, wr1, clk, rst);
-    dff ff4 (rd3, rd2, clk, rst);
-    dff ff5 (wr3, wr2, clk, rst);
+//     dff ff2 (rd2, rd1, clk, rst);
+//     dff ff3 (wr2, wr1, clk, rst);
+//     dff ff4 (rd3, rd2, clk, rst);
+//     dff ff5 (wr3, wr2, clk, rst);
 
-    assign busy = rd1 | rd2 | rd3 | wr1 | wr2 | wr3;
-    assign err = ((rd0 | wr0) & busy)
-               | (rd & wr & enable & ~rst);
+//     assign busy = rd1 | rd2 | rd3 | wr1 | wr2 | wr3;
+//     assign err = ((rd0 | wr0) & busy)
+//                | (rd & wr & enable & ~rst);
 
-    initial begin
-      loaded = 0;
-      largest = 1;
-    end
+//     initial begin
+//       loaded = 0;
+//       largest = 1;
+//     end
 
-    always @(posedge clk) begin
-      if (rst) begin
-         /* 
-        if (!loaded) begin
-           for (i = 0; i  <= 16384; i=i+1) begin
-              mem[i] = 0;
-           end
-          case (bank_id)
-            0: $readmemh("loadfile_0.img", mem);
-            1: $readmemh("loadfile_1.img", mem);
-            2: $readmemh("loadfile_2.img", mem);
-            3: $readmemh("loadfile_3.img", mem);
-          endcase
-          loaded = 1;
-        end
-          */
-      end
-      else begin
-        if (wr1) begin
-          mem[addr_1c<<1] = data_in_1c[15:8];       // The actual write
-          mem[(addr_1c<<1)+1] = data_in_1c[7:0];
-          //if ({1'b0, (addr_1c<<1)+1} > largest) largest = (addr_1c<<1)+1;  
-           // avoid negative numbers
-        end
-         /*
-        if (create_dump) begin
-          case (bank_id)
-            0: mcd = $fopen("dumpfile_0", "w");
-            1: mcd = $fopen("dumpfile_1", "w");
-            2: mcd = $fopen("dumpfile_2", "w");
-            3: mcd = $fopen("dumpfile_3", "w");
-          endcase
-          for (i=0; i<=largest; i=i+1) begin
-            $fdisplay(mcd,"%4h %2h", i, mem[i]);
-          end
-          largeout = $fopen("largest");
-          $fdisplay(largeout,"%4h",largest);
-          $fclose(largeout);
-          $fclose(mcd);
-        end
-          */
-      end
-    end
+//     always @(posedge clk) begin
+//       if (rst) begin
+//          /* 
+//         if (!loaded) begin
+//            for (i = 0; i  <= 16384; i=i+1) begin
+//               mem[i] = 0;
+//            end
+//           case (bank_id)
+//             0: $readmemh("loadfile_0.img", mem);
+//             1: $readmemh("loadfile_1.img", mem);
+//             2: $readmemh("loadfile_2.img", mem);
+//             3: $readmemh("loadfile_3.img", mem);
+//           endcase
+//           loaded = 1;
+//         end
+//           */
+//       end
+//       else begin
+//         if (wr1) begin
+//           mem[addr_1c<<1] = data_in_1c[15:8];       // The actual write
+//           mem[(addr_1c<<1)+1] = data_in_1c[7:0];
+//           //if ({1'b0, (addr_1c<<1)+1} > largest) largest = (addr_1c<<1)+1;  
+//            // avoid negative numbers
+//         end
+//          /*
+//         if (create_dump) begin
+//           case (bank_id)
+//             0: mcd = $fopen("dumpfile_0", "w");
+//             1: mcd = $fopen("dumpfile_1", "w");
+//             2: mcd = $fopen("dumpfile_2", "w");
+//             3: mcd = $fopen("dumpfile_3", "w");
+//           endcase
+//           for (i=0; i<=largest; i=i+1) begin
+//             $fdisplay(mcd,"%4h %2h", i, mem[i]);
+//           end
+//           largeout = $fopen("largest");
+//           $fdisplay(largeout,"%4h",largest);
+//           $fclose(largeout);
+//           $fclose(mcd);
+//         end
+//           */
+//       end
+//     end
 
 
-endmodule  // final_memory
+// endmodule  // final_memory
 // DUMMY LINE FOR REV CONTROL :0:
