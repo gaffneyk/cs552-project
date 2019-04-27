@@ -44,6 +44,6 @@ module IF_stage (
 
 	assign Inst = (insert_stall & ~dmem_stall) ?
 		16'b0000100000000000
-	: Inst_B
+	: Inst_B;
 
 endmodule
