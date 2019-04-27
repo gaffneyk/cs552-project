@@ -1,6 +1,6 @@
 module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
-	rstIn, errIn, dmem_stall, CtrlOut, PCAdd2Out, WriteRegSelOut, ALUOutOut,
-	DMemDataOut, rstOut, errOut);
+	rstIn, errIn, dmem_stall, Halt_nIn, CtrlOut, PCAdd2Out, WriteRegSelOut, 
+	ALUOutOut, DMemDataOut, Halt_nOut, rstOut, errOut);
 
 	input clk;
 	input [15:0] CtrlIn;
@@ -11,12 +11,14 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 	input rstIn;
 	input errIn;
 	input dmem_stall;
+	input Halt_nIn;
 
 	output [15:0] CtrlOut;
 	output [15:0] PCAdd2Out;
 	output [15:0] ALUOutOut;
 	output [15:0] DMemDataOut;
 	output [2:0] WriteRegSelOut;
+	output Halt_nOut;
 	output rstOut;
 	output errOut;
 
@@ -68,9 +70,11 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({15'b0, rstIn}),
+		.writeData({14'b0, Halt_nIn, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
+
+	assign Halt_nOut = rst_reg_out[1];
 
 	assign rstOut = rst_reg_out[0];
 

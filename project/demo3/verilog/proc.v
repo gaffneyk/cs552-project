@@ -85,7 +85,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	EX_MEM_reg EX_MEM (//outputs
 		.CtrlOut(CtrlOut_EX_MEM), .PCAdd2Out(PCAdd2Out_EX_MEM), .WriteRegSelOut(writeRegSelOut_EX_MEM), .ReadData2Out(ReadData2Out_EX_MEM), .ALUOutOut(ALUOutOut_EX_MEM), 
-		.MSBOut(MSBOut_EX_MEM), .ZeroOut(ZeroOut_EX_MEM), .PCImmAddOut(PCImmAddOut_EX_MEM), .Halt_nOut(Halt_n), .rstOut(rst_EX_MEM), .errOut(),
+		.MSBOut(MSBOut_EX_MEM), .ZeroOut(ZeroOut_EX_MEM), .PCImmAddOut(PCImmAddOut_EX_MEM), .Halt_nOut(Halt_n_EX_MEM), .rstOut(rst_EX_MEM), .errOut(),
 		//inputs
 		.clk(clk), .CtrlIn(CtrlOut_ID_EX), .PCAdd2In(PCAdd2Out_ID_EX), .WriteRegSelIn(writeRegSelOut_ID_EX), .ReadData2In(ReadData2Out_ID_EX), .ALUOutIn(ALU_Out_EX), 
 		.MSBIn(MSB_EX), .ZeroIn(Zero_EX), .PCImmAddIn(PCImmAdd_EX), .Halt_nIn(Halt_n_ID_EX), .rstIn(rst_ID_EX), .errIn(),
@@ -105,10 +105,10 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	MEM_WB_reg MEM_WB (//outputs
 		.CtrlOut(CtrlOut_MEM_WB), .PCAdd2Out(PCAdd2Out_MEM_WB), .WriteRegSelOut(writeRegSelOut_MEM_WB), .ALUOutOut(ALUOutOut_MEM_WB), .DMemDataOut(DMemDataOut_MEM_WB), 
-		.rstOut(rst_MEM_WB), .errOut(),
+		.rstOut(rst_MEM_WB), .errOut(), .Halt_nOut(Halt_n),
 		//inputs
 		.clk(clk), .CtrlIn(CtrlOut_EX_MEM), .PCAdd2In(PCAdd2Out_EX_MEM), .WriteRegSelIn(writeRegSelOut_EX_MEM), .ALUOutIn(ALUOutOut_EX_MEM), .DMemDataIn(DMemData_MEM), 
-		.rstIn(rst_EX_MEM), .errIn(), .dmem_stall(dmem_stall));
+		.rstIn(rst_EX_MEM), .errIn(), .dmem_stall(dmem_stall), .Halt_nIn(Halt_n_EX_MEM));
 
 
 
