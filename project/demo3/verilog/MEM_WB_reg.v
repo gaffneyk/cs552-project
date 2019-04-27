@@ -25,12 +25,16 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 	wire Ctrl_err, PCAdd2_err, ALUOut_err, DMemData_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
+	wire [15:0] Ctrl_reg_in;
+
+	// Force a nop if dmem is stalling
+	assign Ctrl_reg_in = dmem_stall ? 16'b0000100001000000 : CtrlIn;
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
-		.writeData(CtrlIn),
+		.writeData(Ctrl_reg_in),
 		.readData(CtrlOut),
 		.writeEn(1'b1));
 
