@@ -25,7 +25,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 	wire Ctrl_err, PCAdd2_err, ALUOut_err, DMemData_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
-	wire [15:0] Ctrl_reg_out
+	wire [15:0] Ctrl_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
