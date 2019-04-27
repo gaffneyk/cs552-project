@@ -1,0 +1,31 @@
+
+module IF_stage (
+		//outputs
+		PCAdd2, Inst,
+		//inputs
+		hazard_f, branch_IF_ID, branch_ID_EX, clk, rst, PCUpdateH, Halt_n
+		);
+
+	input 		hazard_f, branch_IF_ID, branch_ID_EX, clk, rst, Halt_n;
+	input [15:0]	PCUpdateH;
+
+	output [15:0]	PCAdd2, Inst;
+
+	wire		branch_det;
+	wire [1:0]	PC_sel;
+	wire [15:0]	PCUpdate, PCAddr;
+
+	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
+
+	memory2c InstMem (.data_out(Inst), .data_in(16'b0), .addr(PCAddr), .enable(Halt_n), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
+
+	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
+	
+	assign PC_sel = {branch_det, hazard_f};
+	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
+
+	assign	branch_det = (branch_IF_ID | branch_ID_EX);
+	
+
+
+endmodule
