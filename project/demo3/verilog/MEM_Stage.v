@@ -1,7 +1,7 @@
 
 module MEM_stage (
 		//outputs
-		DMemData, PCUpdate, dmem_stall,
+		DMemData, PCUpdate, dmem_stall, dmem_done,
 		//inputs
 		clk, rst, MSB, Zero, readData2, ALU_Out, DMemEn, DMemWrite, DMemDump, PCAdd2, PCImmAdd, PCImm, PCSrc, Jump, OpCode1_0
 		);
@@ -12,9 +12,9 @@ module MEM_stage (
 	
 	output [15:0]	DMemData, PCUpdate;
 
-	output dmem_stall;
+	output dmem_stall, dmem_done;
 
-	wire dmem_done, dmem_cache_hit, dmem_err;
+	wire dmem_cache_hit, dmem_err;
 
 
 	// memory2c DataMem (.data_out(DMemData), .data_in(readData2), .addr(ALU_Out), .enable(DMemEn), .wr(DMemWrite), .createdump(DMemDump), .clk(clk), .rst(rst));

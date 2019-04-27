@@ -37,7 +37,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, 
 	ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX, ZeroOut_EX_MEM, Halt_n, 
 	rst_IF_ID, rst_ID_EX, rst_EX_MEM, rst_MEM_WB, Halt_n_ID, Halt_n_ID_EX,
-	dmem_stall;
+	dmem_stall, dmem_done;
 
 
 	IF_stage IF (//outputs
@@ -95,6 +95,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	MEM_stage MEM (//outputs
 		.DMemData(DMemData_MEM), .PCUpdate(PCUpdateMEM), .dmem_stall(dmem_stall),
+		.dmem_done(dmem_done),
 		//inputs
 		.clk(clk), .rst(rst_EX_MEM), .MSB(MSBOut_EX_MEM), .Zero(ZeroOut_EX_MEM), .readData2(ReadData2Out_EX_MEM), .ALU_Out(ALUOutOut_EX_MEM), .DMemEn(CtrlOut_EX_MEM[5]), 
 		.DMemWrite(CtrlOut_EX_MEM[4]), .DMemDump(CtrlOut_EX_MEM[3]), .PCAdd2(PCAdd2Out_EX_MEM), .PCImmAdd(PCImmAddOut_EX_MEM), .PCImm(CtrlOut_EX_MEM[10]), .PCSrc(CtrlOut_EX_MEM[9]), 
