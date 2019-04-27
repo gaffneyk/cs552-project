@@ -21,7 +21,7 @@ module IF_stage (
 	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
 	// memory2c InstMem (.data_out(Inst_B), .data_in(16'b0), .addr(PCAddr), .enable(1'b1), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
-	stallmem InstMem (.DataOut(Inst_B), .Done(inst_mem_done), 
+	mem_system InstMem (.DataOut(Inst_B), .Done(inst_mem_done), 
 		.Stall(inst_mem_stall), .CacheHit(inst_mem_cache_hit), 
 		.err(inst_mem_err), .Addr(PCAddr), .DataIn(16'b0), .Rd(1'b1),
 		.Wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
