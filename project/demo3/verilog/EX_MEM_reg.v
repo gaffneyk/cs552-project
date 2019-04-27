@@ -32,6 +32,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn,
 	wire Ctrl_err, PCAdd2_err, ReadData2_err, ALUOut_err, PCImmAdd_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
+	wire [15:0] halt_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
@@ -85,11 +86,19 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn,
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({14'b0, Halt_nIn, rstIn}),
+		.writeData({15'b0, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
 
-	assign Halt_nOut = rst_reg_out[1];
+	register halt_reg(
+		.clk(clk),
+		.rst(1'b0),
+		.err(),
+		.writeData({15'b0, Halt_nIn}),
+		.readData(halt_reg_out),
+		.writeEn(~dmem_stall));
+
+	assign Halt_nOut = halt_reg_out[0];
 
 	assign rstOut = rst_reg_out[0];
 
