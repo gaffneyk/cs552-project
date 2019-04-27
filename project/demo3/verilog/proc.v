@@ -43,7 +43,10 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	IF_stage IF (//outputs
 		.PCAdd2(PCAdd2Out_IF), .Inst(Inst_IF),
 		//inputs
-		.hazard_f(hazard_f), .branch_MEM(CtrlOut_EX_MEM[9]), .branch_EX(CtrlOut_ID_EX[9]), .branch_ID(PCSrc_ID), .clk(clk), .rst(rst), .PCUpdateH(PCUpdateMEM), .Halt_n(1'b1));
+		.hazard_f(hazard_f), .branch_MEM(CtrlOut_EX_MEM[9]), 
+		.branch_EX(CtrlOut_ID_EX[9]), .branch_ID(PCSrc_ID), 
+		.clk(clk), .rst(rst), .PCUpdateH(PCUpdateMEM), .Halt_n(1'b1),
+		.dmem_stall(dmem_stall));
 
 
 
