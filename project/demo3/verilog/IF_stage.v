@@ -12,7 +12,7 @@ module IF_stage (
 	output [15:0]	PCAdd2, Inst;
 
 	wire		branch_det, no_hazard, inst_mem_done, inst_mem_stall, 
-		inst_mem_cache_hit, inst_mem_err;
+		inst_mem_cache_hit, inst_mem_err, insert_stall;
 	wire [1:0]	PC_sel;
 	wire [15:0]	PCUpdate, PCAddr, Inst_B;
 
@@ -33,7 +33,9 @@ module IF_stage (
 
 	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
 
-	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(branch_det), .Out(Inst));
+	assign insert_stall = branch_det | inst_mem_stall;
+
+	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(insert_stall), .Out(Inst));
 	
 
 
