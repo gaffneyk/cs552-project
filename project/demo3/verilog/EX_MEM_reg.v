@@ -1,4 +1,7 @@
-module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, MSBIn, ZeroIn, PCImmAddIn, Halt_nIn, rstIn, errIn, CtrlOut, PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, PCImmAddOut, Halt_nOut, rstOut, errOut);
+module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn,
+	MSBIn, ZeroIn, PCImmAddIn, Halt_nIn, rstIn, errIn, dmem_stall, CtrlOut, 
+	PCAdd2Out, WriteRegSelOut, ReadData2Out, ALUOutOut, MSBOut, ZeroOut, 
+	PCImmAddOut, Halt_nOut, rstOut, errOut);
 
 	input clk;
 	input [15:0] CtrlIn;
@@ -12,6 +15,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 	input Halt_nIn;
 	input rstIn;
 	input errIn;
+	input dmem_stall;
 
 	output [15:0] CtrlOut;
 	output [15:0] PCAdd2Out;
@@ -28,6 +32,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 	wire Ctrl_err, PCAdd2_err, ReadData2_err, ALUOut_err, PCImmAdd_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
+	wire [15:0] halt_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
@@ -35,7 +40,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
 		.readData(CtrlOut),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register PCAdd2_reg(
 		.clk(clk),
@@ -43,7 +48,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register ReadData2_reg(
 		.clk(clk),
@@ -51,7 +56,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(ReadData2_err),
 		.writeData(ReadData2In),
 		.readData(ReadData2Out),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register ALUOut_reg(
 		.clk(clk),
@@ -59,7 +64,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register PCImmAdd_reg(
 		.clk(clk),
@@ -67,7 +72,7 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(PCImmAdd_err),
 		.writeData(PCImmAddIn),
 		.readData(PCImmAddOut),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register aux_reg(
 		.clk(clk),
@@ -75,17 +80,25 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn, M
 		.err(aux_err),
 		.writeData({10'b0, MSBIn, ZeroIn, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register rst_reg(
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({14'b0, Halt_nIn, rstIn}),
+		.writeData({15'b0, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
 
-	assign Halt_nOut = rst_reg_out[1];
+	register halt_reg(
+		.clk(clk),
+		.rst(1'b0),
+		.err(),
+		.writeData({15'b0, Halt_nIn}),
+		.readData(halt_reg_out),
+		.writeEn(~dmem_stall));
+
+	assign Halt_nOut = halt_reg_out[0];
 
 	assign rstOut = rst_reg_out[0];
 
