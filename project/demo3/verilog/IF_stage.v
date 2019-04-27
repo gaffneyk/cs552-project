@@ -26,17 +26,20 @@ module IF_stage (
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 	
-	assign no_hazard = branch_det !== 1'b1 & hazard_f !== 1'b1 & insert_stall !== 1'b1;
-	assign PC_sel = no_hazard ? 2'b00 : {branch_det, hazard_f};
-
-	mux4_1_16b PC_in (.InA(PCAdd2), .InB(PCAddr), .InC(PCUpdateH), .InD(PCUpdateH), .S(PC_sel), .Out(PCUpdate));
-
-	assign	branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
-
+	assign branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
 	assign insert_stall = branch_det | inst_mem_stall;
 
-	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(insert_stall), .Out(Inst));
-	
+	// If no hazard, stall, or branch, PCUpdate = PCAdd2
+	// If branch, PCUpdate = PCUpdateH
+	// If stall or hazard, PCUpdate = PCAddr
+	assign PCUpdate = rst ?
+		PCAddr
+	: (!branch_det & !hazard_f & !insert_stall) ?
+		PCAdd2
+	: branch_det ?
+		PCUpdateH
+	: PCAddr;
 
+	mux2_1_16b muxBranch_NOP (.InA(Inst_B), .InB(16'b0000100000000000), .S(insert_stall), .Out(Inst));
 
 endmodule
