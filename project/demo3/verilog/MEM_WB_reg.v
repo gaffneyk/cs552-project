@@ -25,15 +25,14 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 	wire Ctrl_err, PCAdd2_err, ALUOut_err, DMemData_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
-	wire [15:0] Ctrl_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
-		.readData(Ctrl_reg_out),
-		.writeEn(~dmem_stall));
+		.readData(CtrlOut),
+		.writeEn(1'b1));
 
 	register PCAdd2_reg(
 		.clk(clk),
@@ -41,7 +40,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register ALUOut_reg(
 		.clk(clk),
@@ -49,7 +48,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register DMemData_reg(
 		.clk(clk),
@@ -57,7 +56,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(DMemData_err),
 		.writeData(DMemDataIn),
 		.readData(DMemDataOut),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register aux_reg(
 		.clk(clk),
@@ -65,7 +64,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(aux_err),
 		.writeData({12'b0, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register rst_reg(
 		.clk(clk),
@@ -74,9 +73,6 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.writeData({14'b0, Halt_nIn, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
-
-	// Force a nop if dmem is stalling
-	assign CtrlOut = dmem_stall ? 16'b0000100001000000 : Ctrl_reg_out;
 
 	assign Halt_nOut = rst_reg_out[1];
 

@@ -32,13 +32,14 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn,
 	wire Ctrl_err, PCAdd2_err, ReadData2_err, ALUOut_err, PCImmAdd_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
+	wire [15:0] Ctrl_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData(CtrlIn),
-		.readData(CtrlOut),
+		.readData(Ctrl_reg_out),
 		.writeEn(~dmem_stall));
 
 	register PCAdd2_reg(
@@ -88,6 +89,9 @@ module EX_MEM_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ReadData2In, ALUOutIn,
 		.writeData({14'b0, Halt_nIn, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
+	
+	// Force a nop if dmem is stalling
+	assign CtrlOut = dmem_stall ? 16'b0000100001000000 : Ctrl_reg_out;
 
 	assign Halt_nOut = rst_reg_out[1];
 
