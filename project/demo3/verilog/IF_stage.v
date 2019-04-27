@@ -11,13 +11,18 @@ module IF_stage (
 
 	output [15:0]	PCAdd2, Inst;
 
-	wire		branch_det, no_hazard;
+	wire		branch_det, no_hazard, inst_mem_done, inst_mem_stall, 
+		inst_mem_cache_hit, inst_mem_err;
 	wire [1:0]	PC_sel;
 	wire [15:0]	PCUpdate, PCAddr, Inst_B;
 
 	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
-	memory2c InstMem (.data_out(Inst_B), .data_in(16'b0), .addr(PCAddr), .enable(1'b1), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
+	// memory2c InstMem (.data_out(Inst_B), .data_in(16'b0), .addr(PCAddr), .enable(1'b1), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
+	stallmem InstMem (.DataOut(Inst_B), .Done(inst_mem_done), 
+		.Stall(inst_mem_stall), .CacheHit(inst_mem_cache_hit), 
+		.err(inst_mem_err), .Addr(PCAddr), .DataIn(16'b0), .Rd(1'b1),
+		.Wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 	
