@@ -23,7 +23,7 @@ module IF_stage (
 	// memory2c InstMem (.data_out(Inst_B), .data_in(16'b0), .addr(PCAddr), .enable(1'b1), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 	mem_system InstMem (.DataOut(Inst_B), .Done(inst_mem_done), 
 		.Stall(inst_mem_stall), .CacheHit(inst_mem_cache_hit), 
-		.err(inst_mem_err), .Addr(PCAddr), .DataIn(16'b0), .Rd(~rst),
+		.err(inst_mem_err), .Addr(PCAddr), .DataIn(16'b0), .Rd(~rst & ~branch_det),
 		.Wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
