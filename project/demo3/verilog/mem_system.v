@@ -107,7 +107,7 @@ module mem_system(/*AUTOARG*/
    
 
     // your code here
-    cache_controller controller(
+    cache_controller #(memtype) controller(
         // Outputs
         .addr_out(ctrl_addr_out),
         .data_out(ctrl_data_out),

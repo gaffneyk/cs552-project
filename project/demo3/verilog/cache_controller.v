@@ -8,6 +8,8 @@ module cache_controller(
 	cache_hit, clk, rst
 	);
 
+	parameter memtype = 0;
+
 	input [15:0] addr_in,
 				 data_in;
 
@@ -97,7 +99,6 @@ module cache_controller(
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
-		done = 0;
 		stall = 0;
 		reg_en = 1;
 		comp = 0;
@@ -106,7 +107,8 @@ module cache_controller(
 		wr_out = 0;
 		victim_way_in = victim_way_out;
 
-		done = (rd_in | wr_in) 
+		done = memtype
+			& (rd_in | wr_in) 
 			& ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
 
 		next_state = (rd_in | wr_in) ?

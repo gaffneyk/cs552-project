@@ -18,7 +18,7 @@ module MEM_stage (
 
 
 	// memory2c DataMem (.data_out(DMemData), .data_in(readData2), .addr(ALU_Out), .enable(DMemEn), .wr(DMemWrite), .createdump(DMemDump), .clk(clk), .rst(rst));
-	mem_system DataMem (.DataOut(DMemData), .Done(dmem_done), .Stall(dmem_stall),
+	mem_system #(0) DataMem (.DataOut(DMemData), .Done(dmem_done), .Stall(dmem_stall),
 		.CacheHit(dmem_cache_hit), .err(dmem_err), .Addr(ALU_Out),
 		.DataIn(readData2), .Rd(DMemEn), .Wr(DMemWrite), .createdump(DMemDump),
 		.clk(clk), .rst(rst));
