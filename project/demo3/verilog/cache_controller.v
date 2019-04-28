@@ -1,48 +1,36 @@
 module cache_controller(
 	// Outputs
-	addr_out, data_out, cache_offset, cache_enable, mem_offset, 
-	write, comp, wr_out, rd_out, data_src, tag_src, done, stall, 
-	mem_system_cache_hit, err,
+	cache_offset, cache_enable, mem_offset, write, comp, wr_out, 
+	rd_out, data_src, tag_src, done, stall, mem_system_cache_hit, 
+	err,
 	// Inputs
-	addr_in, data_in, rd_in, wr_in, cache_valid, cache_dirty,
+	addr_in, data_in, rd_in, wr_in, cache_valid, cache_dirty, 
 	cache_hit, clk, rst
 	);
 
-	input [15:0] addr_in,
-				 data_in;
-
-	input rd_in,
-		  wr_in,
-		  clk,
+	input clk,
 		  rst;
 
 	input [1:0] cache_valid,
 		  cache_dirty,
 		  cache_hit;
 
-	output [15:0] addr_out,
-				  data_out;
-
 	output reg [2:0] cache_offset,
 				 mem_offset;
 
 	output reg [1:0] cache_enable;
 
-	output reg done, comp, write, wr_out, rd_out, data_src, tag_src, 
-		stall, mem_system_cache_hit, err;
+	output reg done, comp, write, data_src, tag_src, stall, 
+		mem_system_cache_hit, rd_out, wr_out, err;
 
-	wire [15:0] current_state, reg_wr_rd_out;
+	wire [15:0] current_state;
+
 	reg [15:0] next_state;
 
-	wire reg_addr_err,
-	     reg_data_err,
-		 reg_state_err,
-		 reg_wr_rd_err,
-		 state_wr,
-		 state_rd,
+	wire reg_state_err,
 		 victim_way_out;
 
-	reg reg_en, victim_way_in;
+	reg victim_way_in;
 
 	register reg_state(
 		// Outputs
@@ -54,44 +42,11 @@ module cache_controller(
 		.clk(clk),
 		.rst(rst));
 
-	register reg_addr(
-		// Outputs
-		.readData(addr_out),
-		.err(reg_addr_err),
-		// Inputs
-		.writeData(addr_in),
-		.writeEn(reg_en),
-		.clk(clk),
-		.rst(rst));
-
-	register reg_data(
-		// Outputs
-		.readData(data_out),
-		.err(reg_data_err),
-		// Inputs
-		.writeData(data_in),
-		.writeEn(reg_en),
-		.clk(clk),
-		.rst(rst));
-
-	register reg_wr_rd(
-		// Outputs
-		.readData(reg_wr_rd_out),
-		.err(reg_wr_rd_err),
-		// Inputs
-		.writeData({14'b0, wr_in, rd_in}),
-		.writeEn(reg_en),
-		.clk(clk),
-		.rst(rst));
-
 	dff victimway(
 		.q(victim_way_out),
 		.d(rst ? 1'b0 : victim_way_in),
 		.clk(clk),
 		.rst(rst));
-
-	assign state_wr = reg_wr_rd_out[1];
-	assign state_rd = reg_wr_rd_out[0];
 
 	always @(rd_in or wr_in or current_state)
 	casex (current_state[3:0])
@@ -99,7 +54,6 @@ module cache_controller(
 	4'b0000: begin // Idle
 		done = 0;
 		stall = 0;
-		reg_en = 1;
 		rd_out = 0;
 		wr_out = 0;
 		victim_way_in = victim_way_out;
@@ -115,10 +69,9 @@ module cache_controller(
 
 	4'b0001: begin // Compare
 		stall = 1;
-		reg_en = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
-		write = state_wr ? 1 : 0;
+		write = wr_in ? 1 : 0;
 		victim_way_in = ~victim_way_out;
 
 		done = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 1 : 0;
@@ -218,7 +171,7 @@ module cache_controller(
 		data_src = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
-		write = state_wr ? 1 : 0;
+		write = wr_in ? 1 : 0;
 		next_state = 4'b0000; // -> Idle
 	end
 
