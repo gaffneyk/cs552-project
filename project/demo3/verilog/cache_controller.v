@@ -98,13 +98,14 @@ module cache_controller(
 	
 	4'b0000: begin // Idle
 		done = 0;
-		stall = 0;
 		reg_en = 1;
 		comp = 0;
 		write = 0;
 		rd_out = 0;
 		wr_out = 0;
 		victim_way_in = victim_way_out;
+
+		stall = (rd_in | wr_in) ? 1 : 0;
 
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
