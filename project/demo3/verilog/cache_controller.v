@@ -117,7 +117,6 @@ module cache_controller(
 	end
 
 	4'b0001: begin // Compare
-		stall = 1;
 		reg_en = 0;
 		cache_offset = addr_out[2:0];
 		comp = 1;
@@ -125,6 +124,8 @@ module cache_controller(
 		victim_way_in = ~victim_way_out;
 
 		done = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 1 : 0;
+
+		stall = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 0 : 1;
 
 		mem_system_cache_hit = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 1 : 0;
 
