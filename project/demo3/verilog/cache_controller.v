@@ -100,6 +100,7 @@ module cache_controller(
 		done = 0;
 		stall = 0;
 		reg_en = 1;
+		comp = 0;
 		write = 0;
 		rd_out = 0;
 		wr_out = 0;
