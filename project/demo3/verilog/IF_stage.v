@@ -9,7 +9,7 @@ module IF_stage (
 
 	input 		hazard_f, branch_ID, branch_EX, branch_MEM, clk, rst, Halt_n;
 	input [15:0]	PCUpdateH;
-	input [15:0] dmem_stall;
+	input dmem_stall;
 
 	output [15:0]	PCAdd2, Inst;
 
