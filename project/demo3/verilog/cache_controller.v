@@ -105,7 +105,8 @@ module cache_controller(
 		victim_way_in = victim_way_out;
 
 		done = (cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]);
-		stall = ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
+		stall = (rd_in | wr_in) 
+			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
 
 		mem_system_cache_hit = (rd_in | wr_in) 
 			& (cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]);
