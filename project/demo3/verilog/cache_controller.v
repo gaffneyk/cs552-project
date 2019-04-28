@@ -106,6 +106,9 @@ module cache_controller(
 		wr_out = 0;
 		victim_way_in = victim_way_out;
 
+		done = (rd_in | wr_in) 
+			& ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]))
+
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
 		: 4'b0000; // -> Idle
