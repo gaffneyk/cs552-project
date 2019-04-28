@@ -23,7 +23,9 @@ module mem_system(/*AUTOARG*/
    output CacheHit;
    output err;
 
-  wire [15:0] mem_data_out,
+  wire [15:0] ctrl_addr_out,
+                ctrl_data_out,
+                mem_data_out,
                 mux_data_out;
 
    wire [4:0] c0_tag_out, c1_tag_out, mux_tag_out;
@@ -60,8 +62,8 @@ module mem_system(/*AUTOARG*/
                           .clk                  (clk),
                           .rst                  (rst),
                           .createdump           (createdump),
-                          .tag_in               (Addr[15:11]),
-                          .index                (Addr[10:3]),
+                          .tag_in               (ctrl_addr_out[15:11]),
+                          .index                (ctrl_addr_out[10:3]),
                           .offset               (cache_offset),
                           .data_in              (mux_data_out),
                           .comp                 (ctrl_comp),
@@ -79,8 +81,8 @@ module mem_system(/*AUTOARG*/
                           .clk                  (clk),
                           .rst                  (rst),
                           .createdump           (createdump),
-                          .tag_in               (Addr[15:11]),
-                          .index                (Addr[10:3]),
+                          .tag_in               (ctrl_addr_out[15:11]),
+                          .index                (ctrl_addr_out[10:3]),
                           .offset               (cache_offset),
                           .data_in              (mux_data_out),
                           .comp                 (ctrl_comp),
@@ -97,7 +99,7 @@ module mem_system(/*AUTOARG*/
                      .rst               (rst),
                      .createdump        (createdump),
                      .addr              ({mux_tag_out,
-                                          Addr[10:3], 
+                                          ctrl_addr_out[10:3], 
                                           mem_offset}),
                      .data_in           (cache_enable[0] ? c0_data_out : c1_data_out),
                      .wr                (ctrl_wr_out),
@@ -107,6 +109,8 @@ module mem_system(/*AUTOARG*/
     // your code here
     cache_controller controller(
         // Outputs
+        .addr_out(ctrl_addr_out),
+        .data_out(ctrl_data_out),
         .cache_offset(cache_offset),
         .cache_enable(cache_enable),
         .mem_offset(mem_offset),
@@ -132,14 +136,41 @@ module mem_system(/*AUTOARG*/
         .rst(rst)
     );
 
-    assign mux_data_out = data_src ? DataIn : mem_data_out;
+    mux2_1_16b mux_data(
+        .InA(ctrl_data_out),
+        .InB(mem_data_out),
+        .S(data_src),
+        .Out(mux_data_out));
 
-    assign mux_tag_out = tag_src ? 
-      Addr[15:11]
-    : cache_enable[0] ?
-      c0_tag_out
-    :
-      c1_tag_out;
+    mux2_1 mux_tag_0(
+        .InA(ctrl_addr_out[11]),
+        .InB(cache_enable[0] ? c0_tag_out[0] : c1_tag_out[0]),
+        .S(tag_src),
+        .Out(mux_tag_out[0]));
+
+    mux2_1 mux_tag_1(
+        .InA(ctrl_addr_out[12]),
+        .InB(cache_enable[0] ? c0_tag_out[1] : c1_tag_out[1]),
+        .S(tag_src),
+        .Out(mux_tag_out[1]));
+
+    mux2_1 mux_tag_2(
+        .InA(ctrl_addr_out[13]),
+        .InB(cache_enable[0] ? c0_tag_out[2] : c1_tag_out[2]),
+        .S(tag_src),
+        .Out(mux_tag_out[2]));
+
+    mux2_1 mux_tag_3(
+        .InA(ctrl_addr_out[14]),
+        .InB(cache_enable[0] ? c0_tag_out[3] : c1_tag_out[3]),
+        .S(tag_src),
+        .Out(mux_tag_out[3]));
+
+    mux2_1 mux_tag_4(
+        .InA(ctrl_addr_out[15]),
+        .InB(cache_enable[0] ? c0_tag_out[4] : c1_tag_out[4]),
+        .S(tag_src),
+        .Out(mux_tag_out[4]));
 
     assign DataOut = (cache_enable[0] & c0_hit & c0_valid) ? c0_data_out : c1_data_out;
     assign err = c0_err | c1_err | mem_err | ctrl_err;
