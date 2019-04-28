@@ -97,41 +97,27 @@ module cache_controller(
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
-		done = 0;
 		reg_en = 1;
-		comp = 0;
-		write = 0;
+		comp = rd_in;
+		write = wr_in;
 		rd_out = 0;
 		wr_out = 0;
 		victim_way_in = victim_way_out;
 
-		stall = (rd_in | wr_in) ? 1 : 0;
+		done = (cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]);
+		stall = ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
 
-		next_state = (rd_in | wr_in) ?
-			4'b0001 // -> Compare
+		mem_system_cache_hit = (rd_in | wr_in) 
+			& (cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]);
+
+		next_state = ((rd_in | wr_in) 
+			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]))) ?
+			4'b0010 // -> Enable
 		: 4'b0000; // -> Idle
 
 		cache_enable = (rd_in | wr_in) ?
 			2'b11 // -> Compare
 		: 2'b00; // -> Idle
-	end
-
-	4'b0001: begin // Compare
-		reg_en = 0;
-		cache_offset = addr_out[2:0];
-		comp = 1;
-		write = state_wr ? 1 : 0;
-		victim_way_in = ~victim_way_out;
-
-		done = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 1 : 0;
-
-		stall = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 0 : 1;
-
-		mem_system_cache_hit = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ? 1 : 0;
-
-		next_state = ((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1])) ?
-			4'b0000 // -> Idle
-		: 4'b0010;
 	end
 
 	4'b0010: begin // Enable
