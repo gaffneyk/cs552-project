@@ -42,7 +42,7 @@ module IF_stage (
 		PCUpdateH
 	: PCAddr;
 
-	assign Inst = (insert_stall & ~dmem_stall) ?
+	assign Inst = (branch_det | insert_stall | rst | ~inst_mem_done) ?
 		16'b0000100000000000
 	: Inst_B;
 
