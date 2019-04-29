@@ -1,7 +1,7 @@
 module forwarding_unit(id_ex_rs, id_ex_rt, ex_mem_rd, ex_mem_reg_write,
 	mem_wb_rd, mem_wb_reg_write, forward_a, forward_b);
 
-	input [15:0] id_ex_rs, id_ex_rt, ex_mem_rd, mem_wb_rd;
+	input [2:0] id_ex_rs, id_ex_rt, ex_mem_rd, mem_wb_rd;
 	input ex_mem_reg_write, mem_wb_reg_write;
 	output [1:0] forward_a, forward_b;
 
