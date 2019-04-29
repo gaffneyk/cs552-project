@@ -89,7 +89,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	EX_stage EX (//outputs
 		.ALU_Out(ALU_Out_EX), .MSB(MSB_EX), .Zero(Zero_EX), 
-		.PCImmAdd(PCImmAdd_EX), read_data_2_out(read_data_2_ex),
+		.PCImmAdd(PCImmAdd_EX), .read_data_2_out(read_data_2_ex),
 		//inputs
 		.ImmExt(ImmExtOut_ID_EX), .readData1(ReadData1Out_ID_EX), 
 		.readData2(ReadData2Out_ID_EX), .ALUSrc2(CtrlOut_ID_EX[15]), 
