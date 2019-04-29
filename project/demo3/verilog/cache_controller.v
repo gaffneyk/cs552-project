@@ -99,7 +99,7 @@ module cache_controller(
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
-		stall = 0;
+		done = 0;
 		reg_en = 1;
 		comp = 0;
 		write = 0;
@@ -109,7 +109,8 @@ module cache_controller(
 
 		stall = memtype[0]
 			& (rd_in | wr_in) 
-			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
+			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]))
+			& ~;
 
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
