@@ -61,7 +61,7 @@ module ID_stage (
 	// 		((Reg2Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0)
 	// 		& ~rst;
 
-	assign hazard_f = ~rst;
+	assign hazard_f = 1'b0;
 
 	assign rs = Reg1Sel;
 	assign rt = Reg2Sel;
