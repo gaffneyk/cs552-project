@@ -41,7 +41,8 @@ module IF_stage (
 		PCAdd2
 	: branch_det ?
 		PCUpdateH
-	: PCAddr;
+	: 
+		PCAddr;
 
 	assign Inst = insert_nop ?
 		16'b0000100000000000
