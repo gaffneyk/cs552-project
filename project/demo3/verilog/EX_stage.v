@@ -1,7 +1,7 @@
 
 module EX_stage (
 		//outputs
-		ALU_Out, MSB, Zero, PCImmAdd, read_data_2_ex,
+		ALU_Out, MSB, Zero, PCImmAdd, read_data_2_out,
 		//inputs
 		ImmExt, readData1, readData2, ALUSrc2, ALUCtrl, PCAdd2,
 		forward_a, forward_b, ex_mem_data, mem_wb_data
@@ -14,7 +14,7 @@ module EX_stage (
 	input [15:0] ex_mem_data, mem_wb_data;
 
 	output		MSB, Zero;
-	output [15:0]	ALU_Out, PCImmAdd, read_data_2_ex;
+	output [15:0]	ALU_Out, PCImmAdd, read_data_2_out;
 
 	wire [15:0]	ALUSrc2Data;
 	wire [15:0] alu_in_a, alu_in_b;
@@ -33,7 +33,7 @@ module EX_stage (
 	:
 		readData2;
 
-	assign read_data_2_ex = alu_in_b;
+	assign read_data_2_out = alu_in_b;
 
 	mux2_1_16b MuxALUSrc2 (.InA(ImmExt), .InB(alu_in_b), .S(ALUSrc2), .Out(ALUSrc2Data));
 	alu ALU1 (.InA(alu_in_a), .InB(ALUSrc2Data), .Op(ALUCtrl), .Out(ALU_Out), .MSB(MSB), .Zero(Zero));
