@@ -222,6 +222,7 @@ module cache_controller(
 
 	4'b1101: begin // Done
 		done = 1;
+		stall = 0;
 		data_src = 0;
 		reg_en = 1;
 		cache_offset = addr_out[2:0];
