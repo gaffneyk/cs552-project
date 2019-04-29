@@ -20,8 +20,6 @@ module EX_stage (
 
 	wire [15:0] alu_in_a, alu_in_b;
 
-	mux2_1_16b MuxALUSrc2 (.InA(ImmExt), .InB(readData2), .S(ALUSrc2), .Out(ALUSrc2Data));
-
 	assign alu_in_a = (forward_a == 2'b10) ?
 		ex_mem_data
 	: (forward_a == 2'b01) ?
@@ -34,9 +32,10 @@ module EX_stage (
 	: (forward_b == 2'b01) ?
 		mem_wb_data
 	:
-		ALUSrc2Data;
+		readData2;
 
-	alu ALU1 (.InA(alu_in_a), .InB(alu_in_b), .Op(ALUCtrl), .Out(ALU_Out), .MSB(MSB), .Zero(Zero));
+	mux2_1_16b MuxALUSrc2 (.InA(ImmExt), .InB(alu_in_b), .S(ALUSrc2), .Out(ALUSrc2Data));
+	alu ALU1 (.InA(alu_in_a), .InB(ALUSrc2Data), .Op(ALUCtrl), .Out(ALU_Out), .MSB(MSB), .Zero(Zero));
 	rca_16b PCrcaImm(.A(PCAdd2), .B(ImmExt), .C_in(1'b0), .S(PCImmAdd), .C_out(PCrcaImmC_out));
 
 
