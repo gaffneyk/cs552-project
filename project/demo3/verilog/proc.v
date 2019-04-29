@@ -28,7 +28,8 @@ module proc (/*AUTOARG*/
 
 wire [15:0]	CtrlOut_ID_EX, CtrlOut_EX_MEM, CtrlOut_MEM_WB, PCAdd2Out_IF, PCAdd2Out_IF_ID, PCAdd2Out_ID_EX, PCAdd2Out_EX_MEM, PCAdd2Out_MEM_WB, PCUpdateMEM, Inst_IF, Inst_IF_ID, 
 		writeData_WB,readData1_ID, ReadData1Out_ID_EX, readData2_ID, ReadData2Out_ID_EX, ReadData2Out_EX_MEM, ImmExt_ID, ImmExtOut_ID_EX, ALU_Out_EX, ALUOutOut_EX_MEM, 
-		ALUOutOut_MEM_WB, PCImmAdd_EX, PCImmAddOut_EX_MEM, DMemData_MEM, DMemDataOut_MEM_WB;
+		ALUOutOut_MEM_WB, PCImmAdd_EX, PCImmAddOut_EX_MEM, DMemData_MEM, DMemDataOut_MEM_WB,
+		read_data_2_ex;
 wire [3:0]	ALUCtrl_ID;
 wire [2:0]	writeRegSelOut_ID, writeRegSelOut_ID_EX, writeRegSelOut_EX_MEM, writeRegSelOut_MEM_WB;
 wire [1:0]	OpCode1_0_ID;
@@ -88,7 +89,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	EX_stage EX (//outputs
 		.ALU_Out(ALU_Out_EX), .MSB(MSB_EX), .Zero(Zero_EX), 
-		.PCImmAdd(PCImmAdd_EX),
+		.PCImmAdd(PCImmAdd_EX), read_data_2_out(read_data_2_ex),
 		//inputs
 		.ImmExt(ImmExtOut_ID_EX), .readData1(ReadData1Out_ID_EX), 
 		.readData2(ReadData2Out_ID_EX), .ALUSrc2(CtrlOut_ID_EX[15]), 
@@ -102,7 +103,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 		.CtrlOut(CtrlOut_EX_MEM), .PCAdd2Out(PCAdd2Out_EX_MEM), .WriteRegSelOut(writeRegSelOut_EX_MEM), .ReadData2Out(ReadData2Out_EX_MEM), .ALUOutOut(ALUOutOut_EX_MEM), 
 		.MSBOut(MSBOut_EX_MEM), .ZeroOut(ZeroOut_EX_MEM), .PCImmAddOut(PCImmAddOut_EX_MEM), .Halt_nOut(Halt_n_EX_MEM), .rstOut(rst_EX_MEM), .errOut(),
 		//inputs
-		.clk(clk), .CtrlIn(CtrlOut_ID_EX), .PCAdd2In(PCAdd2Out_ID_EX), .WriteRegSelIn(writeRegSelOut_ID_EX), .ReadData2In(ReadData2Out_ID_EX), .ALUOutIn(ALU_Out_EX), 
+		.clk(clk), .CtrlIn(CtrlOut_ID_EX), .PCAdd2In(PCAdd2Out_ID_EX), .WriteRegSelIn(writeRegSelOut_ID_EX), .ReadData2In(read_data_2_ex), .ALUOutIn(ALU_Out_EX), 
 		.MSBIn(MSB_EX), .ZeroIn(Zero_EX), .PCImmAddIn(PCImmAdd_EX), .Halt_nIn(Halt_n_ID_EX), .rstIn(rst_ID_EX), .errIn(),
 		.dmem_stall(dmem_stall));
 
