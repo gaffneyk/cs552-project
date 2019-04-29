@@ -33,6 +33,9 @@ wire [3:0]	ALUCtrl_ID;
 wire [2:0]	writeRegSelOut_ID, writeRegSelOut_ID_EX, writeRegSelOut_EX_MEM, writeRegSelOut_MEM_WB;
 wire [1:0]	OpCode1_0_ID;
 
+wire [2:0] id_rs, id_rt, id_ex_rs, id_ex_rt;
+wire [1:0] forward_a, forward_b;
+
 wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, 
 	ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX, ZeroOut_EX_MEM, Halt_n, 
@@ -61,7 +64,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	ID_stage ID (//outputs
 		.writeRegSelOut(writeRegSelOut_ID), .readData1(readData1_ID), .readData2(readData2_ID), .ImmExt(ImmExt_ID), .hazard_f(hazard_f), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), 
 		.PCSrc(PCSrc_ID), .Jump(Jump_ID), .OpCode1_0(OpCode1_0_ID),.DMemEn(DMemEn_ID), .DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), 
-		.RegWriteOut(RegWriteOut_ID), .ALUSrc2(ALUSrc2_ID), .Halt_n(Halt_n_ID),
+		.RegWriteOut(RegWriteOut_ID), .ALUSrc2(ALUSrc2_ID), .Halt_n(Halt_n_ID), .rs(id_rs), .rt(id_rt),
 		//inputs
 		.Inst(Inst_IF_ID), .clk(clk), .rst(rst_IF_ID), .writeRegSelIn(writeRegSelOut_MEM_WB), .writeData(writeData_WB), .RegWriteIn(CtrlOut_MEM_WB[0]), .writeRegSel_ID_EX(writeRegSelOut_ID_EX),
 		.writeRegSel_EX_MEM(writeRegSelOut_EX_MEM), .writeRegSel_MEM_WB(writeRegSelOut_MEM_WB), .RegWrite_ID_EX(CtrlOut_ID_EX[0]), .RegWrite_EX_MEM(CtrlOut_EX_MEM[0]), .RegWrite_MEM_WB(CtrlOut_MEM_WB[0]));
@@ -69,13 +72,17 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 
 	ID_EX_reg ID_EX (//outputs
-		.CtrlOut(CtrlOut_ID_EX), .PCAdd2Out(PCAdd2Out_ID_EX), .WriteRegSelOut(writeRegSelOut_ID_EX), .ReadData1Out(ReadData1Out_ID_EX), .ReadData2Out(ReadData2Out_ID_EX), 
-		.ImmExtOut(ImmExtOut_ID_EX), .Halt_nOut(Halt_n_ID_EX), .rstOut(rst_ID_EX), .errOut(),
+		.CtrlOut(CtrlOut_ID_EX), .PCAdd2Out(PCAdd2Out_ID_EX), 
+		.WriteRegSelOut(writeRegSelOut_ID_EX), 
+		.ReadData1Out(ReadData1Out_ID_EX), .ReadData2Out(ReadData2Out_ID_EX), 
+		.ImmExtOut(ImmExtOut_ID_EX), .Halt_nOut(Halt_n_ID_EX), 
+		.id_ex_rs(id_ex_rs), .id_ex_rt(id_ex_rt), .rstOut(rst_ID_EX), 
+		.errOut(),
 		//inputs
 		.clk(clk), .ALUSrc2(ALUSrc2_ID), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), .PCSrc(PCSrc_ID), .Jump(Jump_ID), .Opcode1_0(OpCode1_0_ID), .DMemEn(DMemEn_ID), 
 		.DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), .RegWrite(RegWriteOut_ID), .PCAdd2In(PCAdd2Out_IF_ID), 
 		.WriteRegSelIn(writeRegSelOut_ID), .ReadData1In(readData1_ID), .ReadData2In(readData2_ID), .ImmExtIn(ImmExt_ID), .Halt_nIn(Halt_n_ID), .rstIn(rst_IF_ID), .errIn(),
-		.dmem_stall(dmem_stall));
+		.dmem_stall(dmem_stall), .id_rs(id_rs), .id_rt(id_rt));
 
 
 
@@ -119,6 +126,16 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 		.writeData(writeData_WB),
 		//inputs
 		.PCAdd2(PCAdd2Out_MEM_WB), .WriteDataSel(CtrlOut_MEM_WB[1]), .ALU_Out(ALUOutOut_MEM_WB), .DMemData(DMemDataOut_MEM_WB), .MemToReg(CtrlOut_MEM_WB[2]));
+
+	forwarding_unit forwarding(
+		.id_ex_rs(id_ex_rs), 
+		.id_ex_rt(id_ex_rt), 
+		.ex_mem_rd(writeRegSelOut_EX_MEM), 
+		.ex_mem_reg_write(CtrlOut_EX_MEM[0]),
+		.mem_wb_rd(writeRegSelOut_MEM_WB), 
+		.mem_wb_reg_write(CtrlOut_MEM_WB[0]), 
+		.forward_a(forward_a), 
+		.forward_b(forward_b));
 
 
 //assign err = (PCErr | PCrca2Err | CtrlErr | RFErr) & ~rst;
