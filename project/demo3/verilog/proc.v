@@ -87,9 +87,14 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 
 	EX_stage EX (//outputs
-		.ALU_Out(ALU_Out_EX), .MSB(MSB_EX), .Zero(Zero_EX), .PCImmAdd(PCImmAdd_EX),
+		.ALU_Out(ALU_Out_EX), .MSB(MSB_EX), .Zero(Zero_EX), 
+		.PCImmAdd(PCImmAdd_EX),
 		//inputs
-		.ImmExt(ImmExtOut_ID_EX), .readData1(ReadData1Out_ID_EX), .readData2(ReadData2Out_ID_EX), .ALUSrc2(CtrlOut_ID_EX[15]), .ALUCtrl(CtrlOut_ID_EX[14:11]), .PCAdd2(PCAdd2Out_ID_EX));
+		.ImmExt(ImmExtOut_ID_EX), .readData1(ReadData1Out_ID_EX), 
+		.readData2(ReadData2Out_ID_EX), .ALUSrc2(CtrlOut_ID_EX[15]), 
+		.ALUCtrl(CtrlOut_ID_EX[14:11]), .PCAdd2(PCAdd2Out_ID_EX),
+		.forward_a(forward_a), .forward_b(forward_b), 
+		.ex_mem_data(ALUOutOut_EX_MEM), .mem_wb_data(writeData_WB));
 
 
 
