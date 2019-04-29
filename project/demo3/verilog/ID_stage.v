@@ -53,13 +53,15 @@ module ID_stage (
 	assign	Reg1Sel = Inst[10:8];
 	assign	Reg2Sel = Inst[7:5];
 
-	assign	hazard_f = (((Reg1Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
-			((Reg1Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
-			((Reg1Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 :
-			((Reg2Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
-			((Reg2Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
-			((Reg2Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0)
-			& ~rst;
+	// assign	hazard_f = (((Reg1Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
+	// 		((Reg1Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
+	// 		((Reg1Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 :
+	// 		((Reg2Sel === writeRegSel_ID_EX) & RegWrite_ID_EX) ? 1'b1 :
+	// 		((Reg2Sel === writeRegSel_EX_MEM) & RegWrite_EX_MEM) ? 1'b1 :
+	// 		((Reg2Sel === writeRegSel_MEM_WB) & RegWrite_MEM_WB) ? 1'b1 : 1'b0)
+	// 		& ~rst;
+
+	assign hazard_f = ~rst;
 
 	assign rs = Reg1Sel;
 	assign rt = Reg2Sel;
