@@ -109,8 +109,7 @@ module cache_controller(
 
 		stall = memtype[0]
 			& (rd_in | wr_in) 
-			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]))
-			& ~;
+			& ~((cache_hit[0] & cache_valid[0]) | (cache_hit[1] & cache_valid[1]));
 
 		next_state = (rd_in | wr_in) ?
 			4'b0001 // -> Compare
