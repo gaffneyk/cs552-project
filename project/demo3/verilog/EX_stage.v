@@ -36,7 +36,7 @@ module EX_stage (
 	:
 		ALUSrc2Data;
 
-	alu ALU1 (.InA(readData1), .InB(ALUSrc2Data), .Op(ALUCtrl), .Out(ALU_Out), .MSB(MSB), .Zero(Zero));
+	alu ALU1 (.InA(alu_in_a), .InB(alu_in_b), .Op(ALUCtrl), .Out(ALU_Out), .MSB(MSB), .Zero(Zero));
 	rca_16b PCrcaImm(.A(PCAdd2), .B(ImmExt), .C_in(1'b0), .S(PCImmAdd), .C_out(PCrcaImmC_out));
 
 
