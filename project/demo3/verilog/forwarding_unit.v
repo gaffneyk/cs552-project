@@ -7,12 +7,10 @@ module forwarding_unit(id_ex_rs, id_ex_rt, ex_mem_rd, ex_mem_reg_write,
 
 	assign forward_a = 
 		(ex_mem_reg_write 
-			& |ex_mem_rd 
 			& ex_mem_rd == id_ex_rs) ?
 			2'b10
 		: (mem_wb_reg_write 
-			& |mem_wb_rd 
-			& ~(ex_mem_reg_write & |ex_mem_rd & ex_mem_rd == id_ex_rs) 
+			& ~(ex_mem_reg_write & ex_mem_rd == id_ex_rs) 
 			& mem_wb_rd == id_ex_rs) ?
 			2'b01
 		:
@@ -20,12 +18,10 @@ module forwarding_unit(id_ex_rs, id_ex_rt, ex_mem_rd, ex_mem_reg_write,
 
 	assign forward_b =
 		(ex_mem_reg_write
-			& |ex_mem_rd 
 			& ex_mem_rd == id_ex_rt) ?
 			2'b10
 		: (mem_wb_reg_write
-			& |mem_wb_rd
-			& ~(ex_mem_reg_write & |ex_mem_rd & ex_mem_rd == id_ex_rt)
+			& ~(ex_mem_reg_write & ex_mem_rd == id_ex_rt)
 			& mem_wb_rd == id_ex_rt) ?
 			2'b01
 		:
