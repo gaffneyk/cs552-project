@@ -138,6 +138,8 @@ module cache_controller(
 			& ((cache_hit[0] & cache_valid[0]) 
 				| (cache_hit[1] & cache_valid[1]));
 
+		mem_system_cache_hit = done;
+
 		stall = (rd_in | wr_in) 
 			& ~done;
 
