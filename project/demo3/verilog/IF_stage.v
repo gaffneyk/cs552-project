@@ -21,6 +21,7 @@ module IF_stage (
 
 	wire branch_taken_dff_in;
 	wire branch_taken_dff_out;
+	wire is_branching;
 
 	assign inst_mem_rd = ~rst & Halt_n;
 
@@ -46,20 +47,21 @@ module IF_stage (
 	//assign branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
 	assign insert_stall = (~inst_mem_done) | dmem_stall | rst;
 	assign insert_nop = rst | hazard_f | ~inst_mem_done;
+	assign is_branching = BranchTaken | branch_taken_dff_out;
 
 	// If no hazard, stall, or branch, PCUpdate = PCAdd2
 	// If branch, PCUpdate = PCUpdateH
 	// If stall or hazard, PCUpdate = PCAddr
 	assign PCUpdate = rst ?
 		PCAddr
-	: (!BranchTaken & !hazard_f & !insert_stall) ?
+	: (!is_branching & !hazard_f & !insert_stall) ?
 		PCAdd2
-	: BranchTaken ?
+	: is_branching ?
 		PCUpdateH
 	: 
 		PCAddr;
 
-	assign Inst = (insert_nop | BranchTaken | branch_taken_dff_out) ?
+	assign Inst = (insert_nop | is_branching) ?
 		16'b0000100000000000
 	: Inst_B;
 
