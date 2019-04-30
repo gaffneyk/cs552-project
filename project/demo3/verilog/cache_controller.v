@@ -25,7 +25,9 @@ module cache_controller(
 	output [15:0] addr_out,
 				  data_out;
 
-	output reg [2:0] cache_offset,
+	output [2:0] cache_offset;
+
+	output reg [2:0] cache_offset_reg,
 				 mem_offset;
 
 	output reg [1:0] cache_enable;
@@ -34,7 +36,10 @@ module cache_controller(
 		stall, mem_system_cache_hit, err;
 
 	wire [15:0] current_state, reg_wr_rd_out;
+
 	reg [15:0] next_state;
+
+	reg cache_offset_src;
 
 	wire reg_addr_err,
 	     reg_data_err,
@@ -45,6 +50,11 @@ module cache_controller(
 		 victim_way_out;
 
 	reg reg_en, victim_way_in;
+
+	assign cache_offset = cache_offset_src ? 
+		addr_out[2:0]
+	:
+		cache_offset_reg;
 
 	register reg_state(
 		// Outputs
@@ -109,7 +119,7 @@ module cache_controller(
 		rd_out = 0;
 		wr_out = 0;
 		
-		cache_offset = addr_out[2:0];
+		cache_offset_src = 0;
 
 		done = (rd_in | wr_in)
 			& ((cache_hit[0] & cache_valid[0]) 
@@ -146,6 +156,7 @@ module cache_controller(
 	end
 
 	4'b0011: begin // Access Read 0
+		cache_offset_src = 1;
 		cache_offset = 3'b000;
 		mem_offset = 3'b000;
 		comp = 0;
@@ -217,7 +228,7 @@ module cache_controller(
 		stall = 0;
 		data_src = 0;
 		reg_en = 1;
-		cache_offset = addr_out[2:0];
+		cache_offset_src = 0;
 		comp = 1;
 		write = state_wr ? 1 : 0;
 		next_state = 4'b0000; // -> Idle
