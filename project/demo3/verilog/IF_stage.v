@@ -19,7 +19,7 @@ module IF_stage (
 	wire [1:0]	PC_sel;
 	wire [15:0]	PCUpdate, PCAddr, Inst_B;
 
-	assign inst_mem_rd = ~rst & ~branch_det;
+	assign inst_mem_rd = ~rst & ~branch_det & Halt_n;
 
 	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
