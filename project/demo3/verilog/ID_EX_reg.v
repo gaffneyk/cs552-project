@@ -114,7 +114,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 		.writeEn(1'b1));
 
 
-	assign Halt_nOut = rst_reg_out[1];
+	assign Halt_nOut = rst_reg_out[1] | flush;
 
 	assign rstOut = rst_reg_out[0];
 
