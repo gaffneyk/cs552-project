@@ -140,7 +140,6 @@ module cache_controller(
 
 	4'b0010: begin // Enable
 		reg_en = 0;
-
 		cache_enable = (~cache_valid[0]) ?
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
@@ -200,6 +199,7 @@ module cache_controller(
 	end
 
 	4'b1001: begin // Request 2, Access Write 0
+		cache_offset_src = 1;
 		cache_offset_reg = 3'b000;
 		mem_offset = 3'b100;
 		comp = 0;
