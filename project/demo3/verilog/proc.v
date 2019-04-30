@@ -41,7 +41,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, 
 	ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX, ZeroOut_EX_MEM, Halt_n, 
 	rst_IF_ID, rst_ID_EX, rst_EX_MEM, rst_MEM_WB, Halt_n_ID, Halt_n_ID_EX,
-	dmem_stall, dmem_done, Halt_n_IF;
+	Halt_n_EX_MEM, dmem_stall, dmem_done, Halt_n_IF;
 
 	assign Halt_n_IF = Halt_n_ID & Halt_n_ID_EX & Halt_n_EX_MEM;
 
