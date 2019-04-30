@@ -41,7 +41,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	DMemDump_ID, MemToReg_ID, WriteDataSel_ID, RegWriteOut_ID, 
 	ALUSrc2_ID, MSB_EX, MSBOut_EX_MEM, Zero_EX, ZeroOut_EX_MEM, Halt_n, 
 	rst_IF_ID, rst_ID_EX, rst_EX_MEM, rst_MEM_WB, Halt_n_ID, Halt_n_ID_EX,
-	Halt_n_EX_MEM, dmem_stall, dmem_done, Halt_n_IF;
+	Halt_n_EX_MEM, dmem_stall, dmem_done, Halt_n_IF, BranchTaken;
 
 	assign Halt_n_IF = Halt_n_ID & Halt_n_ID_EX & Halt_n_EX_MEM;
 
@@ -51,7 +51,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 		.hazard_f(hazard_f), .branch_MEM(CtrlOut_EX_MEM[9]), 
 		.branch_EX(CtrlOut_ID_EX[9]), .branch_ID(PCSrc_ID), 
 		.clk(clk), .rst(rst), .PCUpdateH(PCUpdateMEM), .Halt_n(Halt_n_IF),
-		.dmem_stall(dmem_stall));
+		.dmem_stall(dmem_stall), .BranchTaken(BranchTaken));
 
 
 
@@ -59,7 +59,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 		.PCAdd2Out(PCAdd2Out_IF_ID), .InstOut(Inst_IF_ID), .rstOut(rst_IF_ID), .errOut(),
 		//inputs
 		.clk(clk), .hazard_f(hazard_f), .PCAdd2In(PCAdd2Out_IF), .InstIn(Inst_IF), .rstIn(rst), .errIn(),
-		.dmem_stall(dmem_stall));
+		.dmem_stall(dmem_stall), .flush(BranchTaken));
 
 
 
@@ -84,7 +84,8 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 		.clk(clk), .ALUSrc2(ALUSrc2_ID), .ALUCtrl(ALUCtrl_ID), .PCImm(PCImm_ID), .PCSrc(PCSrc_ID), .Jump(Jump_ID), .Opcode1_0(OpCode1_0_ID), .DMemEn(DMemEn_ID), 
 		.DMemWrite(DMemWrite_ID), .DMemDump(DMemDump_ID), .MemToReg(MemToReg_ID), .WriteDataSel(WriteDataSel_ID), .RegWrite(RegWriteOut_ID), .PCAdd2In(PCAdd2Out_IF_ID), 
 		.WriteRegSelIn(writeRegSelOut_ID), .ReadData1In(readData1_ID), .ReadData2In(readData2_ID), .ImmExtIn(ImmExt_ID), .Halt_nIn(Halt_n_ID), .rstIn(rst_IF_ID), .errIn(),
-		.dmem_stall(dmem_stall), .id_rs(id_rs), .id_rt(id_rt));
+		.dmem_stall(dmem_stall), .id_rs(id_rs), .id_rt(id_rt), 
+		.flush(BranchTaken));
 
 
 
@@ -112,7 +113,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 
 	MEM_stage MEM (//outputs
 		.DMemData(DMemData_MEM), .PCUpdate(PCUpdateMEM), .dmem_stall(dmem_stall),
-		.dmem_done(dmem_done),
+		.dmem_done(dmem_done), .BranchTaken(BranchTaken),
 		//inputs
 		.clk(clk), .rst(rst_EX_MEM), .MSB(MSBOut_EX_MEM), .Zero(ZeroOut_EX_MEM), .readData2(ReadData2Out_EX_MEM), .ALU_Out(ALUOutOut_EX_MEM), .DMemEn(CtrlOut_EX_MEM[5]), 
 		.DMemWrite(CtrlOut_EX_MEM[4]), .DMemDump(CtrlOut_EX_MEM[3]), .PCAdd2(PCAdd2Out_EX_MEM), .PCImmAdd(PCImmAddOut_EX_MEM), .PCImm(CtrlOut_EX_MEM[10]), .PCSrc(CtrlOut_EX_MEM[9]), 

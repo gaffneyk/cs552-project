@@ -1,7 +1,7 @@
 module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 	DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite, PCAdd2In, 
 	WriteRegSelIn, ReadData1In, ReadData2In, ImmExtIn, Halt_nIn, 
-	id_rs, id_rt, rstIn, errIn, dmem_stall,
+	id_rs, id_rt, rstIn, errIn, dmem_stall, flush,
 	CtrlOut, PCAdd2Out, WriteRegSelOut, id_ex_rs, id_ex_rt, ReadData1Out, 
 	ReadData2Out, ImmExtOut, Halt_nOut, rstOut, errOut);
 
@@ -29,6 +29,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 	input rstIn;
 	input errIn;
 	input dmem_stall;
+	input flush;
 
 	output [15:0] CtrlOut;
 	output [15:0] PCAdd2Out;
@@ -43,13 +44,17 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 	wire Ctrl_err, PCAdd2_err, ReadData1_err, ReadData2_err, ImmExt_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
+	wire [15:0] Ctrl_reg_out;
+
+	mux2_1_16b FlushMux(.InA(Ctrl_reg_out), 
+			.InB({Ctrl_reg_out[15:11], 1'b0, 1'b0, 1'b0, Ctrl_reg_out[7:6], 1'b0, 1'b0, 1'b0, Ctrl_reg_out[2], Ctrl_reg_out[1], 1'b0 & ~rstIn}), .S(flush), .Out(CtrlOut));
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
 		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite & ~rstIn}),
-		.readData(CtrlOut),
+		.readData(Ctrl_reg_out),
 		.writeEn(~dmem_stall));
 
 	register PCAdd2_reg(
