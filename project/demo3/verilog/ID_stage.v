@@ -33,7 +33,7 @@ module ID_stage (
              	     // Inputs
                 .OpCode(Inst[15:11]), .Funct(Inst[1:0]), .rst(rst));
 
-	rf RegisterFiles (// Outputs
+	rf_bypass RegisterFiles (// Outputs
            	     .readData1(readData1), .readData2(readData2), .err(RFErr),
            	  	  // Inputs
            	     .clk(clk), .rst(rst), .readReg1Sel(Inst[10:8]), .readReg2Sel(Inst[7:5]), .writeRegSel(writeRegSelIn), .writeData(writeData), .writeEn(RegWriteIn));
