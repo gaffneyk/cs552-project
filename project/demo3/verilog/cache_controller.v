@@ -221,12 +221,12 @@ module cache_controller(
 
 	4'b1100: begin // Access Write 3
 		cache_offset_reg = 3'b110;
-		next_state = 4'b1101;
+		stall = 0;
+		next_state = 4'b1101; // -> Done
 	end
 
 	4'b1101: begin // Done
 		done = 1;
-		stall = 0;
 		data_src = 0;
 		reg_en = 1;
 		cache_offset_src = 1;
