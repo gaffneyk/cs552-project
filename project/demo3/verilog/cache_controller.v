@@ -158,7 +158,7 @@ module cache_controller(
 
 	4'b0011: begin // Access Read 0
 		cache_offset_src = 1;
-		cache_offset = 3'b000;
+		cache_offset_reg = 3'b000;
 		mem_offset = 3'b000;
 		comp = 0;
 		write = 0;
@@ -169,19 +169,19 @@ module cache_controller(
 	end
 
 	4'b0100: begin // Access Read 1
-		cache_offset = 3'b010;
+		cache_offset_reg = 3'b010;
 		mem_offset = 3'b010;
 		next_state = 4'b0101; // -> Access Read 2
 	end
 
 	4'b0101: begin // Access Read 2
-		cache_offset = 3'b100;
+		cache_offset_reg = 3'b100;
 		mem_offset = 3'b100;
 		next_state = 4'b0110; // -> Access Read 3
 	end
 
 	4'b0110: begin // Access Read 3
-		cache_offset = 3'b110;
+		cache_offset_reg = 3'b110;
 		mem_offset = 3'b110;
 		next_state = 4'b0111; // -> Request 0
 	end
@@ -200,7 +200,7 @@ module cache_controller(
 	end
 
 	4'b1001: begin // Request 2, Access Write 0
-		cache_offset = 3'b000;
+		cache_offset_reg = 3'b000;
 		mem_offset = 3'b100;
 		comp = 0;
 		write = 1;
@@ -209,18 +209,18 @@ module cache_controller(
 	end
 
 	4'b1010: begin // Request 3, Access Write 1
-		cache_offset = 3'b010;
+		cache_offset_reg = 3'b010;
 		mem_offset = 3'b110;
 		next_state = 4'b1011; // -> Access Write 2
 	end
 
 	4'b1011: begin // Access Write 2
-		cache_offset = 3'b100;
+		cache_offset_reg = 3'b100;
 		next_state = 4'b1100; // -> Access Write 3
 	end
 
 	4'b1100: begin // Access Write 3
-		cache_offset = 3'b110;
+		cache_offset_reg = 3'b110;
 		next_state = 4'b1101;
 	end
 
