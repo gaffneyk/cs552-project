@@ -59,7 +59,7 @@ module IF_stage (
 	: 
 		PCAddr;
 
-	assign Inst = insert_nop ?
+	assign Inst = (insert_nop | BranchTaken | branch_taken_dff_out) ?
 		16'b0000100000000000
 	: Inst_B;
 
