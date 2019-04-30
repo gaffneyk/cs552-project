@@ -56,7 +56,7 @@ module IF_stage (
 		PCAddr
 	: (!is_branching & !hazard_f & !insert_stall) ?
 		PCAdd2
-	: is_branching ?
+	: BranchTaken ?
 		PCUpdateH
 	: 
 		PCAddr;
