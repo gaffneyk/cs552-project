@@ -46,15 +46,16 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 	wire [15:0] rst_reg_out;
 	wire [15:0] Ctrl_reg_out;
 
-	mux2_1_16b FlushMux(.InA(Ctrl_reg_out), 
-			.InB({Ctrl_reg_out[15:11], 
-				  3'b000, 
-				  Ctrl_reg_out[7:6], 
-				  3'b000, 
-				  Ctrl_reg_out[2:1],
-				  1'b0 & ~rstIn}),
-			.S(flush), 
-			.Out(CtrlOut));
+	mux2_1_16b FlushMux(
+		.InA(Ctrl_reg_out), 
+		.InB({Ctrl_reg_out[15:11], 
+			  3'b000, 
+			  Ctrl_reg_out[7:6], 
+			  3'b000, 
+			  Ctrl_reg_out[2:1],
+			  1'b0 & ~rstIn}),
+		.S(flush), 
+		.Out(CtrlOut));
 
 	register Ctrl_reg(
 		.clk(clk),
