@@ -120,7 +120,7 @@ module cache_controller(
 		rd_out = 0;
 		wr_out = 0;
 		
-		cache_offset_src = 0;
+		cache_offset_src = 1;
 
 		done = (rd_in | wr_in)
 			& ((cache_hit[0] & cache_valid[0]) 
@@ -156,7 +156,7 @@ module cache_controller(
 	end
 
 	4'b0011: begin // Access Read 0
-		cache_offset_src = 1;
+		cache_offset_src = 0;
 		cache_offset_reg = 3'b000;
 		mem_offset = 3'b000;
 		comp = 0;
@@ -199,7 +199,7 @@ module cache_controller(
 	end
 
 	4'b1001: begin // Request 2, Access Write 0
-		cache_offset_src = 1;
+		cache_offset_src = 0;
 		cache_offset_reg = 3'b000;
 		mem_offset = 3'b100;
 		comp = 0;
@@ -229,7 +229,7 @@ module cache_controller(
 		stall = 0;
 		data_src = 0;
 		reg_en = 1;
-		cache_offset_src = 0;
+		cache_offset_src = 1;
 		comp = 1;
 		write = state_wr ? 1 : 0;
 		next_state = 4'b0000; // -> Idle
