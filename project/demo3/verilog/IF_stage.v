@@ -19,7 +19,13 @@ module IF_stage (
 	wire [1:0]	PC_sel;
 	wire [15:0]	PCUpdate, PCAddr, Inst_B;
 
+	wire branch_taken_dff_in;
+	wire branch_taken_dff_out;
+
 	assign inst_mem_rd = ~rst & Halt_n;
+
+	assign branch_taken_dff_in = BranchTaken 
+		| (branch_taken_dff_out & ~inst_mem_done);
 
 	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
 
@@ -30,6 +36,12 @@ module IF_stage (
 		.Wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
+
+	dff branch_taken_dff(
+		.q(branch_taken_dff_out), // output
+		.d(branch_taken_dff_in), // input
+		.clk(clk),
+		.rst(rst));
 	
 	//assign branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
 	assign insert_stall = (~inst_mem_done) | dmem_stall | rst;
