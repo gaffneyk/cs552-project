@@ -36,7 +36,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(Ctrl_err),
 		.writeData(Ctrl_reg_in),
 		.readData(CtrlOut),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register PCAdd2_reg(
 		.clk(clk),
@@ -44,7 +44,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register ALUOut_reg(
 		.clk(clk),
@@ -52,7 +52,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register DMemData_reg(
 		.clk(clk),
@@ -60,7 +60,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(DMemData_err),
 		.writeData(DMemDataIn),
 		.readData(DMemDataOut),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register aux_reg(
 		.clk(clk),
@@ -68,7 +68,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(aux_err),
 		.writeData({12'b0, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
-		.writeEn(~dmem_stall));
+		.writeEn(1'b1));
 
 	register rst_reg(
 		.clk(clk),
