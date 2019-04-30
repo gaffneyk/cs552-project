@@ -27,8 +27,7 @@ module cache_controller(
 
 	output [2:0] cache_offset;
 
-	output reg [2:0] cache_offset_reg,
-				 mem_offset;
+	output reg [2:0] mem_offset;
 
 	output reg [1:0] cache_enable;
 
@@ -38,6 +37,8 @@ module cache_controller(
 	wire [15:0] current_state, reg_wr_rd_out;
 
 	reg [15:0] next_state;
+
+	reg [2:0] cache_offset_reg;
 
 	reg cache_offset_src;
 
