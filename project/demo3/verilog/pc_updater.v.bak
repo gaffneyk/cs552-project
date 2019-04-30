@@ -1,4 +1,4 @@
-module pc_updater(PC_2, PC_2_I, PCImm, PCSrc, Jump, Op_1_0, ALUResult, MSB, Zero, Out, BranchTaken);
+module pc_updater(PC_2, PC_2_I, PCImm, PCSrc, Jump, Op_1_0, ALUResult, MSB, Zero, Out);
 
 	input [15:0] PC_2;
 	input [15:0] PC_2_I;
@@ -11,7 +11,6 @@ module pc_updater(PC_2, PC_2_I, PCImm, PCSrc, Jump, Op_1_0, ALUResult, MSB, Zero
 	input Zero;
 
 	output [15:0] Out;
-	output BranchTaken;
 
 	wire branch_mux_out;
 	wire [15:0] first_mux_out;
@@ -21,7 +20,5 @@ module pc_updater(PC_2, PC_2_I, PCImm, PCSrc, Jump, Op_1_0, ALUResult, MSB, Zero
 	mux2_1_16b first_mux(.InA(PC_2), .InB(PC_2_I), .S(PCImm), .Out(first_mux_out));
 	mux2_1_16b second_mux(.InA(first_mux_out), .InB(PC_2_I), .S(PCSrc & branch_mux_out), .Out(second_mux_out));
 	mux2_1_16b third_mux(.InA(second_mux_out), .InB(ALUResult), .S(Jump), .Out(Out));
-
-	assign BranchTaken = ((PCSrc & branch_mux_out) | PCImm | Jump);
 
 endmodule

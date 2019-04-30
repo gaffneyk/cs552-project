@@ -4,12 +4,12 @@ module IF_stage (
 		PCAdd2, Inst,
 		//inputs
 		hazard_f, branch_ID, branch_EX, branch_MEM, clk, rst, PCUpdateH,
-		Halt_n, dmem_stall
+		Halt_n, dmem_stall, BranchTaken
 		);
 
 	input 		hazard_f, branch_ID, branch_EX, branch_MEM, clk, rst, Halt_n;
 	input [15:0]	PCUpdateH;
-	input dmem_stall;
+	input 		dmem_stall, BranchTaken;
 
 	output [15:0]	PCAdd2, Inst;
 
@@ -28,18 +28,18 @@ module IF_stage (
 
 	rca_16b PCrca2 (.A(PCAddr), .B(16'b10), .C_in(1'b0), .S(PCAdd2), .C_out(PCrca2Err));
 	
-	assign branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
-	assign insert_stall = branch_det | (~inst_mem_done) | dmem_stall | rst;
-	assign insert_nop = rst | branch_det | hazard_f | ~inst_mem_done;
+	//assign branch_det = (branch_ID === 1'b1 | branch_EX === 1'b1 | branch_MEM === 1'b1);
+	assign insert_stall = (~inst_mem_done) | dmem_stall | rst;
+	assign insert_nop = rst | hazard_f | ~inst_mem_done;
 
 	// If no hazard, stall, or branch, PCUpdate = PCAdd2
 	// If branch, PCUpdate = PCUpdateH
 	// If stall or hazard, PCUpdate = PCAddr
 	assign PCUpdate = rst ?
 		PCAddr
-	: (!branch_det & !hazard_f & !insert_stall) ?
+	: (!BranchTaken & !hazard_f & !insert_stall) ?
 		PCAdd2
-	: branch_det ?
+	: BranchTaken ?
 		PCUpdateH
 	: PCAddr;
 

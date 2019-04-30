@@ -44,17 +44,17 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 	wire Ctrl_err, PCAdd2_err, ReadData1_err, ReadData2_err, ImmExt_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
-	wire [15:0] Ctrl_reg_out;
+	wire [15:0] Ctrl_reg_write;
 
-	mux2_1_16b FlushMux(.InA(Ctrl_reg_out), 
-			.InB({Ctrl_reg_out[15:11], 1'b0, 1'b0, 1'b0, Ctrl_reg_out[7:6], 1'b0, 1'b0, 1'b0, Ctrl_reg_out[2], Ctrl_reg_out[1], 1'b0 & ~rstIn}), .S(flush), .Out(CtrlOut));
+	mux2_1_16b FlushMux(.InA({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite & ~rstIn}), 
+			.InB({ALUSrc2, ALUCtrl, 1'b0, 1'b0, 1'b0, Opcode1_0, 1'b0, 1'b0, 1'b0, MemToReg, WriteDataSel, 1'b0 & ~rstIn}), .S(flush), .Out(Ctrl_reg_write));
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
-		.writeData({ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn, DMemWrite, DMemDump, MemToReg, WriteDataSel, RegWrite & ~rstIn}),
-		.readData(Ctrl_reg_out),
+		.writeData(Ctrl_reg_write),
+		.readData(CtrlOut),
 		.writeEn(~dmem_stall));
 
 	register PCAdd2_reg(
