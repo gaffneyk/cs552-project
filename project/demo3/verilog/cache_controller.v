@@ -40,7 +40,7 @@ module cache_controller(
 
 	reg [2:0] cache_offset_reg;
 
-	wire [15:0] reg_addr_out;
+	wire [15:0] reg_addr_out, reg_data_out;
 
 	wire reg_addr_err,
 	     reg_data_err,
@@ -50,17 +50,23 @@ module cache_controller(
 		 state_rd,
 		 victim_way_out;
 
-	reg reg_en, victim_way_in, cache_offset_src, addr_out_src;
+	reg reg_en, victim_way_in, cache_offset_src, addr_data_out_src;
 
 	assign cache_offset = cache_offset_src ? 
 		addr_out[2:0]
 	:
 		cache_offset_reg;
 
-	assign addr_out = addr_out_src ?
+	assign addr_out = addr_data_out_src ?
 		addr_in
 	:
 		reg_addr_out;
+
+
+	assign data_out = addr_data_out_src ?
+		data_in
+	:
+		reg_data_out;
 
 	register reg_state(
 		// Outputs
@@ -84,7 +90,7 @@ module cache_controller(
 
 	register reg_data(
 		// Outputs
-		.readData(data_out),
+		.readData(reg_data_out),
 		.err(reg_data_err),
 		// Inputs
 		.writeData(data_in),
@@ -118,7 +124,7 @@ module cache_controller(
 		victim_way_in = victim_way_out;
 
 		reg_en = 1;
-		addr_out_src = 1;
+		addr_data_out_src = 1;
 
 		comp = 1;
 		write = wr_in;
@@ -146,7 +152,7 @@ module cache_controller(
 
 	4'b0010: begin // Enable
 		reg_en = 0;
-		addr_out_src = 0;
+		addr_data_out_src = 0;
 		cache_enable = (~cache_valid[0]) ?
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
