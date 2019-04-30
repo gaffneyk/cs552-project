@@ -40,7 +40,7 @@ module cache_controller(
 
 	reg [2:0] cache_offset_reg;
 
-	reg cache_offset_src;
+	wire [15:0] reg_addr_out;
 
 	wire reg_addr_err,
 	     reg_data_err,
@@ -50,12 +50,17 @@ module cache_controller(
 		 state_rd,
 		 victim_way_out;
 
-	reg reg_en, victim_way_in;
+	reg reg_en, victim_way_in, cache_offset_src, addr_out_src;
 
 	assign cache_offset = cache_offset_src ? 
 		addr_out[2:0]
 	:
 		cache_offset_reg;
+
+	assign addr_out = addr_out_src ?
+		addr_in
+	:
+		reg_addr_out;
 
 	register reg_state(
 		// Outputs
@@ -69,7 +74,7 @@ module cache_controller(
 
 	register reg_addr(
 		// Outputs
-		.readData(addr_out),
+		.readData(reg_addr_out),
 		.err(reg_addr_err),
 		// Inputs
 		.writeData(addr_in),
@@ -113,6 +118,7 @@ module cache_controller(
 		victim_way_in = victim_way_out;
 
 		reg_en = 1;
+		addr_out_src = 1;
 
 		comp = 1;
 		write = wr_in;
@@ -140,6 +146,7 @@ module cache_controller(
 
 	4'b0010: begin // Enable
 		reg_en = 0;
+		addr_out_src = 0;
 		cache_enable = (~cache_valid[0]) ?
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
@@ -221,12 +228,12 @@ module cache_controller(
 
 	4'b1100: begin // Access Write 3
 		cache_offset_reg = 3'b110;
-		stall = 0;
-		done = 1;
 		next_state = 4'b1101; // -> Done
 	end
 
 	4'b1101: begin // Done
+		done = 1;
+		stall = 0;
 		data_src = 0;
 		reg_en = 1;
 		cache_offset_src = 1;
