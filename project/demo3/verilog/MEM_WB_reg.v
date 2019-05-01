@@ -25,18 +25,19 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 	wire Ctrl_err, PCAdd2_err, ALUOut_err, DMemData_err, aux_err;
 	wire [15:0] aux_reg_out;
 	wire [15:0] rst_reg_out;
-	wire [15:0] Ctrl_reg_in;
+	wire [15:0] Ctrl_reg_out;
+	wire [15:0] halt_reg_out;
 
 	// Force a nop if dmem is stalling
-	assign Ctrl_reg_in = dmem_stall ? 16'b0000100001000000 : CtrlIn;
+	assign CtrlOut = dmem_stall ? 16'b0000100001000000 : Ctrl_reg_out;
 
 	register Ctrl_reg(
 		.clk(clk),
 		.rst(rstIn),
 		.err(Ctrl_err),
-		.writeData(Ctrl_reg_in),
-		.readData(CtrlOut),
-		.writeEn(1'b1));
+		.writeData(CtrlIn),
+		.readData(Ctrl_reg_out),
+		.writeEn(~dmem_stall));
 
 	register PCAdd2_reg(
 		.clk(clk),
@@ -44,7 +45,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(PCAdd2_err),
 		.writeData(PCAdd2In),
 		.readData(PCAdd2Out),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register ALUOut_reg(
 		.clk(clk),
@@ -52,7 +53,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(ALUOut_err),
 		.writeData(ALUOutIn),
 		.readData(ALUOutOut),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register DMemData_reg(
 		.clk(clk),
@@ -60,7 +61,7 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(DMemData_err),
 		.writeData(DMemDataIn),
 		.readData(DMemDataOut),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register aux_reg(
 		.clk(clk),
@@ -68,17 +69,25 @@ module MEM_WB_reg(clk, CtrlIn, PCAdd2In, WriteRegSelIn, ALUOutIn, DMemDataIn,
 		.err(aux_err),
 		.writeData({12'b0, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
-		.writeEn(1'b1));
+		.writeEn(~dmem_stall));
 
 	register rst_reg(
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({14'b0, Halt_nIn, rstIn}),
+		.writeData({15'b0, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
 
-	assign Halt_nOut = rst_reg_out[1];
+	register halt_reg(
+		.clk(clk),
+		.rst(1'b0),
+		.err(),
+		.writeData({15'b0, Halt_nIn}),
+		.readData(halt_reg_out),
+		.writeEn(~dmem_stall));
+
+	assign Halt_nOut = halt_reg_out[0];
 
 	assign rstOut = rst_reg_out[0];
 
