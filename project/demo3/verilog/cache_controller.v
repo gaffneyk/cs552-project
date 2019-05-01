@@ -29,7 +29,7 @@ module cache_controller(
 
 	output reg [2:0] mem_offset;
 
-	output reg [1:0] cache_enable, cache_enable_temp;
+	output reg [1:0] cache_enable;
 
 	output reg done, comp, write, wr_out, rd_out, data_src, tag_src, 
 		stall, mem_system_cache_hit, err;
@@ -39,6 +39,8 @@ module cache_controller(
 	reg [15:0] next_state;
 
 	reg [2:0] cache_offset_reg;
+
+	reg [1:0] cache_enable_temp;
 
 	wire [15:0] reg_addr_out, reg_data_out;
 
