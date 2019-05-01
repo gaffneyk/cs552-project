@@ -123,7 +123,7 @@ module cache_controller(
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
-		victim_way_in = victim_way_out;
+		victim_way_in = (rd_in | wr_in) ? ~victim_way_out : victim_way_out;
 
 		reg_en = 1;
 		addr_data_out_src = 1;
