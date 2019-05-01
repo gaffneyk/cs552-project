@@ -165,9 +165,9 @@ module cache_controller(
 			2'b10 // Both ways are valid, choose victim
 		: 2'b01;
 
-		next_state = (cache_enable[0] & cache_valid[0] & cache_dirty[0]) ?
+		next_state = (cache_enable_temp[0] & cache_valid[0] & cache_dirty[0]) ?
 			4'b0011 // -> Access Read 0
-		: (cache_enable[1] & cache_valid[1] & cache_dirty[1]) ?
+		: (cache_enable_temp[1] & cache_valid[1] & cache_dirty[1]) ?
 			4'b0011 // -> Access Read 0
 		: 4'b0111; // -> Request 0
 	end
