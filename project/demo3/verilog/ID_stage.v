@@ -7,10 +7,12 @@ module ID_stage (
 		//inputs
 		Inst, clk, rst, writeRegSelIn, writeData, RegWriteIn, 
 		writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB, 
-		RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB
+		RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB,
+		DMemEn_ID_EX, DMemWrite_ID_EX
 		);
 
-	input		clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB;
+	input		clk, rst, RegWriteIn, RegWrite_ID_EX, RegWrite_EX_MEM, RegWrite_MEM_WB,
+		DMemEn_ID_EX, DMemWrite_ID_EX;
 	input [2:0]	writeRegSelIn, writeRegSel_ID_EX, writeRegSel_EX_MEM, writeRegSel_MEM_WB;
 	input [15:0]	Inst, writeData;
 
@@ -67,8 +69,8 @@ module ID_stage (
 	// and ((ID/EX.RegisterRt=IF/ID.RegisterRs) 
 	// or (ID/EX.RegisterRt=IF/ID.RegisterRt)))
 
-	assign hazard_f = (DMemEn 
-		& ~DMemWrite 
+	assign hazard_f = (DMemEn_ID_EX 
+		& ~DMemWrite_ID_EX 
 		& ((Reg1Sel == writeRegSel_ID_EX) | (Reg2Sel == writeRegSel_ID_EX)));
 
 	assign rs = Reg1Sel;
