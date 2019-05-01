@@ -29,7 +29,7 @@ module cache_controller(
 
 	output reg [2:0] mem_offset;
 
-	output reg [1:0] cache_enable;
+	output reg [1:0] cache_enable, cache_enable_temp;
 
 	output reg done, comp, write, wr_out, rd_out, data_src, tag_src, 
 		stall, mem_system_cache_hit, err;
@@ -117,7 +117,7 @@ module cache_controller(
 	assign state_wr = reg_wr_rd_out[1];
 	assign state_rd = reg_wr_rd_out[0];
 
-	always @(rd_in or wr_in or current_state)
+	always @(rd_in or wr_in or current_state or cache_hit or cache_valid)
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
@@ -155,7 +155,7 @@ module cache_controller(
 	4'b0010: begin // Enable
 		reg_en = 0;
 		addr_data_out_src = 0;
-		cache_enable = (~cache_valid[0]) ?
+		cache_enable_temp = (cache_valid[0]) ?
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
 			2'b10 // Way 1 is invalid, enable way 1
@@ -167,10 +167,13 @@ module cache_controller(
 			4'b0011 // -> Access Read 0
 		: (cache_enable[1] & cache_valid[1] & cache_dirty[1]) ?
 			4'b0011 // -> Access Read 0
-		: 4'b0111;
+		: 4'b0111; // -> Request 0
+
+		enable_done = 1;
 	end
 
 	4'b0011: begin // Access Read 0
+		cache_enable = cache_enable_temp;
 		cache_offset_src = 0;
 		cache_offset_reg = 3'b000;
 		mem_offset = 3'b000;
@@ -201,6 +204,7 @@ module cache_controller(
 	end
 
 	4'b0111: begin // Request 0
+		cache_enable = cache_enable_temp;
 		mem_offset = 3'b000;
 		tag_src = 0;
 		wr_out = 0;
