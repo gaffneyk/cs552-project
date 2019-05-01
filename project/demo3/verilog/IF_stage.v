@@ -23,12 +23,12 @@ module IF_stage (
 	wire branch_taken_dff_out;
 	wire is_branching;
 
-	assign inst_mem_rd = ~rst & Halt_n;
+	assign inst_mem_rd = ~rst & ~Halt_n;
 
 	assign branch_taken_dff_in = BranchTaken 
 		| (branch_taken_dff_out & ~inst_mem_done);
 
-	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(Halt_n));
+	register PC (.readData(PCAddr), .err(PCErr), .clk(clk), .rst(rst), .writeData(PCUpdate), .writeEn(~Halt_n));
 
 	// memory2c InstMem (.data_out(Inst_B), .data_in(16'b0), .addr(PCAddr), .enable(1'b1), .wr(1'b0), .createdump(1'b0), .clk(clk), .rst(rst));
 	mem_system #(0) InstMem (.DataOut(Inst_B), .Done(inst_mem_done), 

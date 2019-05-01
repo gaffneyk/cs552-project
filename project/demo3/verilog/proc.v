@@ -43,7 +43,7 @@ wire PCSrc_ID, hazard_f, PCImm_ID, Jump_ID, DMemEn_ID, DMemWrite_ID,
 	rst_IF_ID, rst_ID_EX, rst_EX_MEM, rst_MEM_WB, Halt_n_ID, Halt_n_ID_EX,
 	Halt_n_EX_MEM, dmem_stall, dmem_done, Halt_n_IF, BranchTaken;
 
-	assign Halt_n_IF = Halt_n_ID & Halt_n_ID_EX & Halt_n_EX_MEM;
+	assign Halt_n_IF = Halt_n_ID | Halt_n_ID_EX | Halt_n_EX_MEM;
 
 	IF_stage IF (//outputs
 		.PCAdd2(PCAdd2Out_IF), .Inst(Inst_IF),
