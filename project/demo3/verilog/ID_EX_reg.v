@@ -101,7 +101,7 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 		.clk(clk),
 		.rst(rstIn),
 		.err(aux_err),
-		.writeData({5'b0, Halt_nIn, id_rs, id_rt, WriteRegSelIn, errIn}),
+		.writeData({6'b0, id_rs, id_rt, WriteRegSelIn, errIn}),
 		.readData(aux_reg_out),
 		.writeEn(~dmem_stall));
 
@@ -109,12 +109,12 @@ module ID_EX_reg(clk, ALUSrc2, ALUCtrl, PCImm, PCSrc, Jump, Opcode1_0, DMemEn,
 		.clk(clk),
 		.rst(1'b0),
 		.err(),
-		.writeData({15'b0, rstIn}),
+		.writeData({14'b0, Halt_nIn, rstIn}),
 		.readData(rst_reg_out),
 		.writeEn(1'b1));
 
 
-	assign Halt_nOut = aux_reg_out[10] | flush;
+	assign Halt_nOut = rst_reg_out[1] | flush;
 
 	assign rstOut = rst_reg_out[0];
 
