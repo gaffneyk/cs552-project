@@ -168,8 +168,6 @@ module cache_controller(
 		: (cache_enable[1] & cache_valid[1] & cache_dirty[1]) ?
 			4'b0011 // -> Access Read 0
 		: 4'b0111; // -> Request 0
-
-		enable_done = 1;
 	end
 
 	4'b0011: begin // Access Read 0
