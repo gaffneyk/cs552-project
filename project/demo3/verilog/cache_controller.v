@@ -42,6 +42,8 @@ module cache_controller(
 
 	reg [1:0] cache_enable_temp;
 
+	reg lru_write, lru_in;
+
 	wire [15:0] reg_addr_out, reg_data_out;
 
 	wire reg_addr_err,
@@ -50,9 +52,13 @@ module cache_controller(
 		 reg_wr_rd_err,
 		 state_wr,
 		 state_rd,
-		 victim_way_out;
+		 // victim_way_out;
+		 lru_out;
 
-	reg reg_en, victim_way_in, cache_offset_src, addr_data_out_src;
+	reg reg_en, 
+		// victim_way_in, 
+		cache_offset_src, 
+		addr_data_out_src;
 
 	assign cache_offset = cache_offset_src ? 
 		addr_out[2:0]
@@ -110,11 +116,21 @@ module cache_controller(
 		.clk(clk),
 		.rst(rst));
 
-	dff victimway(
-		.q(victim_way_out),
-		.d(rst ? 1'b0 : victim_way_in),
+	memc #(1) lru(
+		.data_out(lru_out),
+		.addr(addr_out[10:3]),
+		.data_in(lru_in),
+		.write(lru_write),
 		.clk(clk),
-		.rst(rst));
+		.rst(rst),
+		.createdump(1'b0),
+		.file_id(5'b00000));
+
+	// dff victimway(
+	// 	.q(victim_way_out),
+	// 	.d(rst ? 1'b0 : victim_way_in),
+	// 	.clk(clk),
+	// 	.rst(rst));
 
 	assign state_wr = reg_wr_rd_out[1];
 	assign state_rd = reg_wr_rd_out[0];
@@ -123,7 +139,7 @@ module cache_controller(
 	casex (current_state[3:0])
 	
 	4'b0000: begin // Idle
-		victim_way_in = (rd_in | wr_in) ? ~victim_way_out : victim_way_out;
+		// victim_way_in = (rd_in | wr_in) ? ~victim_way_out : victim_way_out;
 
 		reg_en = 1;
 		addr_data_out_src = 1;
@@ -139,6 +155,9 @@ module cache_controller(
 		done = (rd_in | wr_in)
 			& ((cache_hit[0] & cache_valid[0]) 
 				| (cache_hit[1] & cache_valid[1]));
+
+		lru_write = done;
+		lru_in = cache_hit[0] & cache_valid[0];
 
 		mem_system_cache_hit = done;
 
@@ -161,7 +180,7 @@ module cache_controller(
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
 			2'b10 // Way 1 is invalid, enable way 1
-		: (victim_way_out) ?
+		: (lru_out) ?
 			2'b10 // Both ways are valid, choose victim
 		: 2'b01;
 
