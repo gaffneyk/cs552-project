@@ -157,7 +157,7 @@ module cache_controller(
 	4'b0010: begin // Enable
 		reg_en = 0;
 		addr_data_out_src = 0;
-		cache_enable_temp = (cache_valid[0]) ?
+		cache_enable_temp = (~cache_valid[0]) ?
 			2'b01 // Way 0 is invalid, enable way 0
 		: (~cache_valid[1]) ?
 			2'b10 // Way 1 is invalid, enable way 1
